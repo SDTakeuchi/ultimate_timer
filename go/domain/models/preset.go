@@ -3,21 +3,23 @@ package models
 import (
 	"errors"
 	"time"
+	"encoding/json"
 	"ultimate_timer/services"
 )
 
 type Preset struct {
 	BaseModel
-	Name         string `db:"name" json:"name"`
-	DisplayOrder int `db:"display_order" json:"display_order"`
-	WaitsConfirm bool   `db:"waits_confirm" json:"waits_confirm"`
-	LoopCount    int    `db:"loop_count" json:"loop_count"`
-	Unit         []Unit
+	Name             string `db:"name" json:"name"`
+	DisplayOrder     int    `db:"display_order" json:"display_order"`
+	LoopCount        int    `db:"loop_count" json:"loop_count"`
+	WaitsConfirmEach bool   `db:"waits_confirm_each" json:"waits_confirm_each"`
+	WaitsConfirmLast bool   `db:"waits_confirm_last" json:"waits_confirm_last"`
+	TimerUnit        []TimerUnit `db:"timer_unit" json:"timer_unit"`
 }
 
-type Unit struct {
-	Duration time.Duration `db:"duration" json:"duration"`
-	PresetID string        `db:"preset_id" json:"preset_id"`
+type TimerUnit struct {
+	Order int `json:"order"`
+	Duration time.Duration `json:"duration"`
 }
 
 /*
@@ -27,16 +29,17 @@ setter is for updating new objects (returns error if failed to udpate)
 
 // constructor
 func NewPreset(
-	name, memo string,
-	price int,
-	purchaseDate time.Time) (*Preset, error) {
+	name string,
+	displayOrder, loopCount int,
+	waitsConfirmEach, waitsConfirmLast bool,
+	timerUnits []TimerUnit) (*Preset, error) {
 
 	if name == "" {
 		return nil, errors.New("項目名を入力してください")
 	}
 
 	now := time.Now()
-	id := lib.GenUuid()
+	id := services.GenUuid()
 
 	preset := &Preset{
 		BaseModel: BaseModel{
@@ -44,35 +47,32 @@ func NewPreset(
 			CreatedAt: now,
 			UpdatedAt: now,
 		},
-		Name:         name,
-		Memo:         memo,
-		Price:        price,
-		PurchaseDate: purchaseDate,
-		// SmallCategoryId: smallCategoryId,
-		// UserId:          userId,
+		Name:             name,
+		DisplayOrder:     displayOrder,
+		LoopCount:        loopCount,
+		WaitsConfirmEach: waitsConfirmEach,
+		WaitsConfirmLast: waitsConfirmLast,
+		TimerUnit:        timerUnits,
 	}
 
-	return item, nil
+	return preset, nil
 }
 
 // setter
 func (p *Preset) Set(
-	name, memo string,
-	price int,
-	purchaseDate time.Time) error {
-
-	if name == "" {
-		return errors.New("項目名を入力してください")
-	}
+	name string,
+	displayOrder, loopCount int,
+	waitsConfirmEach, waitsConfirmLast bool,
+	timerUnits []TimerUnit) error {
 
 	now := time.Now()
 
-	i.UpdatedAt = now
-	i.Name = name
-	i.Memo = memo
-	i.Price = price
-	i.PurchaseDate = purchaseDate
-	// i.SmallCategoryId = smallCategoryId
+	p.UpdatedAt = now
+	p.DisplayOrder = displayOrder
+	p.LoopCount = loopCount
+	p.WaitsConfirmEach = waitsConfirmEach
+	p.WaitsConfirmLast = waitsConfirmLast
+	p.TimerUnit = timerUnits
 
 	return nil
 }
