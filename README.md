@@ -1,2 +1,3 @@
 # ultimate_timer
-Ultimate Timer that I have longed for
+You can save your timer presets, such as Pomodoro timer, Tabata traning timer.
+Customize interval and duration as you wish.
