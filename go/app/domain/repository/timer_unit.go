@@ -1,4 +1,4 @@
-package repositories
+package repository
 
 import (
     "ultimate_timer/domain/model"
@@ -7,7 +7,8 @@ import (
 // TaskRepository task repositoryのinterface
 type TimerUnitRepository interface {
     Create(timerUnit *model.TimerUnit) (*model.TimerUnit, error)
-    FindByID(id int) (*model.TimerUnit, error)
+    FindByPresetID(id string) ([]*model.TimerUnit, error)
+    FindByID(id string) (*model.TimerUnit, error)
     Update(timerUnit *model.TimerUnit) (*model.TimerUnit, error)
     Delete(timerUnit *model.TimerUnit) error
 }

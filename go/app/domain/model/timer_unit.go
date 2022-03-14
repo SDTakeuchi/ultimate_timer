@@ -1,28 +1,19 @@
-package models
+package model
 
 import (
 	"time"
-	"ultimate_timer/services"
+	"ultimate_timer/service"
 )
 
 type TimerUnit struct {
-	BaseModel
-	Duration time.Duration `db:"duration" json:"duration"`
-	Order    int           `db:"order" json:"order"`
-	PresetID string        `db:"preset_id" json:"preset_id"`
+	Duration time.Duration `json:"duration"`
+	Order    int           `json:"order"`
+	PresetID string          `json:"-"`			//hides in json response
 }
 
 // constructor
 func NewTimerUnit(duration time.Duration, order int, presetID string) (*TimerUnit, error) {
-	now := time.Now()
-	id := services.GenUuid()
-
 	tu := &TimerUnit{
-		BaseModel: BaseModel{
-			ID:        id,
-			CreatedAt: now,
-			UpdatedAt: now,
-		},
 		Duration: duration,
 		Order:    order,
 		PresetID: presetID,
@@ -33,9 +24,6 @@ func NewTimerUnit(duration time.Duration, order int, presetID string) (*TimerUni
 
 // setter
 func (tu *TimerUnit) Set(duration time.Duration, order int) error {
-	now := time.Now()
-
-	tu.UpdatedAt = now
 	tu.Duration = duration
 	tu.Order = order
 

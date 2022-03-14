@@ -1,0 +1,54 @@
+version: '3'
+services:
+    db:
+        image: postgres:13-alpine
+        hostname: postgresql
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            PGPASSWORD: postgres
+            POSTGRES_DB: postgres
+            TZ: "Asia/Tokyo"
+        volumes:
+            # - ./postgresql/data:/var/lib/postgresql/data/
+            - db_volume:/var/lib/postgresql
+        restart: always
+    app:
+        build: ./go
+        container_name: go_app
+        hostname: go_app
+        tty: true
+        ports:
+            - "8080:8080"
+        volumes:
+            - ./go/app:/go/src/app/
+        depends_on:
+            - db
+    # nginx:
+    #     build: ./nginx
+    #     container_name: nginx_container
+    #     hostname: nginx
+    #     environment:
+    #         - TZ=Asia/Tokyo
+    #     ports:
+    #         - "80:80"
+    #     depends_on:
+    #         - app
+    # frontend:
+    #     build: ./material-kit-react-main
+    #     container_name: frontend_container
+    #     hostname: frontend
+    #     volumes:
+    #         - ./material-kit-react-main/material-kit-react-main:/usr/src/app
+    #         # - ./frontend/personal_page:/usr/src/app
+    #     tty: true
+    #     environment:
+    #         # enables hot reload
+    #         - CHOKIDAR_USEPOLLING=true
+    #     ports:
+    #         - "3000:3000"
+
+volumes:
+    db_volume:

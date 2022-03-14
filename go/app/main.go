@@ -2,14 +2,13 @@ package main
 
 import (
 	// "ultimate_timer/services"
-	"net/http"
 	"github.com/labstack/echo"
+	"net/http"
 	// "github.com/labstack/echo/middleware"
 
-
 	// "errors"
-	"time"
 	"fmt"
+	"time"
 	// "encoding/json"
 	// "ultimate_timer/services"
 	"github.com/jinzhu/gorm"
@@ -17,22 +16,20 @@ import (
 )
 
 func main() {
-    e := echo.New()
+	e := echo.New()
 
 	defer db.Close()
 	// Middleware
 	// e.Use(services.Logger)
 	// e.Use(middleware.Recover())
 
-    e.GET("/", func(c echo.Context) error {
-        return c.String(http.StatusOK, "Hello, World!")
-    })
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Hello, World!")
+	})
 	e.GET("/preset/:id", FindPresetByID)
 	e.POST("/preset", CreatePreset)
-    e.Logger.Fatal(e.Start(":8080"))
+	e.Logger.Fatal(e.Start(":8080"))
 }
-
-
 
 var (
 	db  *gorm.DB
@@ -52,32 +49,28 @@ func init() {
 
 type Preset struct {
 	gorm.Model
-	Name             string `db:"name" json:"name"`
-	DisplayOrder     int    `db:"display_order" json:"display_order"`
-	LoopCount        int    `db:"loop_count" json:"loop_count"`
-	WaitsConfirmEach bool   `db:"waits_confirm_each" json:"waits_confirm_each"`
-	WaitsConfirmLast bool   `db:"waits_confirm_last" json:"waits_confirm_last"`
-	TimerUnits        []TimerUnit `gorm:"ForeignKey:PresetID" db:"timer_unit" json:"timer_unit"`
+	Name             string      `db:"name" json:"name"`
+	DisplayOrder     int         `db:"display_order" json:"display_order"`
+	LoopCount        int         `db:"loop_count" json:"loop_count"`
+	WaitsConfirmEach bool        `db:"waits_confirm_each" json:"waits_confirm_each"`
+	WaitsConfirmLast bool        `db:"waits_confirm_last" json:"waits_confirm_last"`
+	TimerUnits       []TimerUnit `db:"timer_unit" json:"timer_unit"`
 }
 
 type TimerUnit struct {
-	Order int `json:"order"`
+	Order    int           `json:"order"`
 	Duration time.Duration `json:"duration"`
-	PresetID uint
+	PresetID uint          `json:"-"`			//hides in json response
 }
 
-
 func CreatePreset(c echo.Context) error {
-    preset := new(Preset)
-	now := time.Now()
-	preset.CreatedAt = now
-	preset.UpdatedAt = now
-    if err := c.Bind(preset); err != nil {
-        return err
-    }
-	db.NewRecord(preset)
+	preset := new(Preset)
+	if err := c.Bind(preset); err != nil {
+		return err
+	}
+	db.NewRecord(preset) // just checks if it IS a NEW RECORD (primary key is not duplicated)
 	db.Create(&preset)
-    return c.JSON(http.StatusOK, preset)
+	return c.JSON(http.StatusOK, preset)
 }
 
 func FindPresetByID(c echo.Context) error {

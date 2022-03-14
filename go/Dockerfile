@@ -5,9 +5,9 @@ WORKDIR /go/src/app
 RUN export GO111MODULE=auto \
 && apt-get update
 
-COPY ./main.go .
+COPY ./app/main.go .
 
-RUN go mod init main \
+RUN go mod init ultimate_timer \
 && go get . \
 && go build
 

@@ -1,4 +1,4 @@
-package models
+package model
 
 import (
 	"errors"
@@ -9,17 +9,18 @@ import (
 
 type Preset struct {
 	BaseModel
-	Name             string `db:"name" json:"name"`
-	DisplayOrder     int    `db:"display_order" json:"display_order"`
-	LoopCount        int    `db:"loop_count" json:"loop_count"`
-	WaitsConfirmEach bool   `db:"waits_confirm_each" json:"waits_confirm_each"`
-	WaitsConfirmLast bool   `db:"waits_confirm_last" json:"waits_confirm_last"`
-	TimerUnit        []TimerUnit `db:"timer_unit" json:"timer_unit"`
+	Name             string      `db:"name" json:"name"`
+	DisplayOrder     int         `db:"display_order" json:"display_order"`
+	LoopCount        int         `db:"loop_count" json:"loop_count"`
+	WaitsConfirmEach bool        `db:"waits_confirm_each" json:"waits_confirm_each"`
+	WaitsConfirmLast bool        `db:"waits_confirm_last" json:"waits_confirm_last"`
+	TimerUnits       []TimerUnit `db:"timer_unit" json:"timer_unit"`
 }
 
 type TimerUnit struct {
-	Order int `json:"order"`
+	Order    int           `json:"order"`
 	Duration time.Duration `json:"duration"`
+	PresetID string          `json:"-"`			//hides in json response
 }
 
 /*
