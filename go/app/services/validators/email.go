@@ -4,12 +4,10 @@ import (
 	"mail"
 )
 
-func EmailIsValid (m string) (msg string){
+func EmailIsValid (m string) (errMsg string){
     _, err := mail.ParseAddress(m)
-	if err == nil {
-		msg = "有効なメールアドレスです"
-	} else {
-		msg = "不正なメールアドレスです"
+	if err != nil {
+		errMsg = "不正なメールアドレスです"
 	}
 	return
 }

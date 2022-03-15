@@ -5,6 +5,11 @@ import (
 	"github.com/labstack/echo"
 	"net/http"
 	// "github.com/labstack/echo/middleware"
+	"ultimate_timer/domain/model"
+	"ultimate_timer/domain/repository"
+	"ultimate_timer/usecase"
+	"ultimate_timer/infra"
+	"ultimate_timer/handler"
 
 	// "errors"
 	"fmt"
@@ -47,36 +52,47 @@ func init() {
 	db.LogMode(true)
 }
 
-type Preset struct {
-	gorm.Model
-	Name             string      `db:"name" json:"name"`
-	DisplayOrder     int         `db:"display_order" json:"display_order"`
-	LoopCount        int         `db:"loop_count" json:"loop_count"`
-	WaitsConfirmEach bool        `db:"waits_confirm_each" json:"waits_confirm_each"`
-	WaitsConfirmLast bool        `db:"waits_confirm_last" json:"waits_confirm_last"`
-	TimerUnits       []TimerUnit `db:"timer_unit" json:"timer_unit"`
+
+func main() {
+    taskRepository := infra.NewPresetRepository(config.NewDB()) //TODO: fix
+    taskUsecase := usecase.NewPresetUsecase(taskRepository)
+    taskHandler := handler.NewPresetHandler(taskUsecase)
+
+    e := echo.New()
+    handler.InitRouting(e, taskHandler)
+    e.Logger.Fatal(e.Start(":8080"))
 }
 
-type TimerUnit struct {
-	Order    int           `json:"order"`
-	Duration time.Duration `json:"duration"`
-	PresetID uint          `json:"-"`			//hides in json response
-}
+// type Preset struct {
+// 	gorm.Model
+// 	Name             string      `db:"name" json:"name"`
+// 	DisplayOrder     int         `db:"display_order" json:"display_order"`
+// 	LoopCount        int         `db:"loop_count" json:"loop_count"`
+// 	WaitsConfirmEach bool        `db:"waits_confirm_each" json:"waits_confirm_each"`
+// 	WaitsConfirmLast bool        `db:"waits_confirm_last" json:"waits_confirm_last"`
+// 	TimerUnits       []TimerUnit `db:"timer_unit" json:"timer_unit"`
+// }
 
-func CreatePreset(c echo.Context) error {
-	preset := new(Preset)
-	if err := c.Bind(preset); err != nil {
-		return err
-	}
-	db.NewRecord(preset) // just checks if it IS a NEW RECORD (primary key is not duplicated)
-	db.Create(&preset)
-	return c.JSON(http.StatusOK, preset)
-}
+// type TimerUnit struct {
+// 	Order    int           `json:"order"`
+// 	Duration time.Duration `json:"duration"`
+// 	PresetID uint          `json:"-"`			//hides in json response
+// }
 
-func FindPresetByID(c echo.Context) error {
-	preset := Preset{}
-	id := c.Param("id")
-	db.First(&preset, id).Related(&preset.TimerUnits)
-	// db.First(&preset, id).Model(&preset).Related(&preset.TimerUnits)  works as well, WHY?
-	return c.JSON(http.StatusOK, preset)
-}
+// func CreatePreset(c echo.Context) error {
+// 	preset := new(Preset)
+// 	if err := c.Bind(preset); err != nil {
+// 		return err
+// 	}
+// 	db.NewRecord(preset) // just checks if it IS a NEW RECORD (primary key is not duplicated)
+// 	db.Create(&preset)
+// 	return c.JSON(http.StatusOK, preset)
+// }
+
+// func FindPresetByID(c echo.Context) error {
+// 	preset := Preset{}
+// 	id := c.Param("id")
+// 	db.First(&preset, id).Related(&preset.TimerUnits)
+// 	// db.First(&preset, id).Model(&preset).Related(&preset.TimerUnits)  works as well, WHY?
+// 	return c.JSON(http.StatusOK, preset)
+// }

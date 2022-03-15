@@ -18,9 +18,9 @@ type Preset struct {
 }
 
 type TimerUnit struct {
-	Order    int           `json:"order"`
-	Duration time.Duration `json:"duration"`
-	PresetID string          `json:"-"`			//hides in json response
+	Order    int           `db:"order"`
+	Duration time.Duration `db:"duration"`
+	PresetID string          `db:"preset_id"`
 }
 
 /*
