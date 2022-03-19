@@ -2,7 +2,7 @@ package services
 
 import (
 	"strconv"
-	"ultimate_timer/usecase"
+	// "ultimate_timer/usecase"
 )
 
 func AutoName() string {
@@ -12,7 +12,7 @@ func AutoName() string {
 	for i := 1; i < maxTimerCount; i++ {
 		n = "タイマー " + strconv.Itoa(i)
 		// TODO no such function as GetByName
-		timer = usecase.GetByName(n)
+		// timer = usecase.GetByName(n)
 		if timer == nil {
 			return n
 		}

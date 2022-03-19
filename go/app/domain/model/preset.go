@@ -3,7 +3,6 @@ package model
 import (
 	"errors"
 	"time"
-	"encoding/json"
 	"ultimate_timer/services"
 )
 
@@ -15,12 +14,6 @@ type Preset struct {
 	WaitsConfirmEach bool        `db:"waits_confirm_each" json:"waits_confirm_each"`
 	WaitsConfirmLast bool        `db:"waits_confirm_last" json:"waits_confirm_last"`
 	TimerUnits       []TimerUnit `db:"timer_unit" json:"timer_unit"`
-}
-
-type TimerUnit struct {
-	Order    int           `db:"order"`
-	Duration time.Duration `db:"duration"`
-	PresetID string          `db:"preset_id"`
 }
 
 /*
@@ -53,7 +46,7 @@ func NewPreset(
 		LoopCount:        loopCount,
 		WaitsConfirmEach: waitsConfirmEach,
 		WaitsConfirmLast: waitsConfirmLast,
-		TimerUnit:        timerUnits,
+		TimerUnits:        timerUnits,
 	}
 
 	return preset, nil
@@ -73,7 +66,7 @@ func (p *Preset) Set(
 	p.LoopCount = loopCount
 	p.WaitsConfirmEach = waitsConfirmEach
 	p.WaitsConfirmLast = waitsConfirmLast
-	p.TimerUnit = timerUnits
+	p.TimerUnits = timerUnits
 
 	return nil
 }

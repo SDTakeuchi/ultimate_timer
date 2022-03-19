@@ -2,7 +2,7 @@ package services
 
 import "github.com/google/uuid"
 
-func GenUuid() (id string) {
-	id = uuid.New()
-	return
+func GenUuid() string {
+	id := uuid.New()
+	return id.String()
 }

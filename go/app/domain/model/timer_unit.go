@@ -2,13 +2,12 @@ package model
 
 import (
 	"time"
-	"ultimate_timer/service"
 )
 
 type TimerUnit struct {
-	Duration time.Duration `json:"duration"`
-	Order    int           `json:"order"`
-	PresetID string          `json:"-"`			//hides in json response
+	Duration time.Duration `db:"order" json:"duration"`
+	Order    int           `db:"duration" json:"order"`
+	PresetID string          `db:"preset_id" json:"-"`			//hides in json response
 }
 
 // constructor

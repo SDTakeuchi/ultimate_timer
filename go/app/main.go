@@ -1,15 +1,16 @@
 package main
 
 import (
-	// "ultimate_timer/services"
+	"ultimate_timer/services"
 	"github.com/labstack/echo"
 	"net/http"
-	// "github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/middleware"
 	"ultimate_timer/domain/model"
 	"ultimate_timer/domain/repository"
 	"ultimate_timer/usecase"
 	"ultimate_timer/infra"
 	"ultimate_timer/handler"
+	"ultimate_timer/config"
 
 	// "errors"
 	"fmt"
@@ -20,45 +21,48 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
+// func main() {
+// 	e := echo.New()
+
+// 	defer db.Close()
+// 	// Middleware
+// 	// e.Use(services.Logger)
+// 	// e.Use(middleware.Recover())
+
+// 	e.GET("/", func(c echo.Context) error {
+// 		return c.String(http.StatusOK, "Hello, World!")
+// 	})
+// 	e.GET("/preset/:id", FindPresetByID)
+// 	e.POST("/preset", CreatePreset)
+// 	e.Logger.Fatal(e.Start(":8080"))
+// }
+
+// var (
+// 	db  *gorm.DB
+// 	err error
+// )
+
+// func init() {
+// 	db, err = gorm.Open("postgres", "host=db port=5432 user=postgres dbname=postgres password=postgres sslmode=disable")
+// 	if err != nil {
+// 		panic(err.Error())
+// 	}
+// 	fmt.Println("db connected: ", &db)
+// 	db.Set("gorm:table_options", "ENGINE=InnoDB")
+// 	db.AutoMigrate(&Preset{})
+// 	db.LogMode(true)
+// }
+
+
 func main() {
-	e := echo.New()
-
-	defer db.Close()
-	// Middleware
-	// e.Use(services.Logger)
-	// e.Use(middleware.Recover())
-
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
-	})
-	e.GET("/preset/:id", FindPresetByID)
-	e.POST("/preset", CreatePreset)
-	e.Logger.Fatal(e.Start(":8080"))
-}
-
-var (
-	db  *gorm.DB
-	err error
-)
-
-func init() {
-	db, err = gorm.Open("postgres", "host=db port=5432 user=postgres dbname=postgres password=postgres sslmode=disable")
-	if err != nil {
-		panic(err.Error())
-	}
-	fmt.Println("db connected: ", &db)
-	db.Set("gorm:table_options", "ENGINE=InnoDB")
-	db.AutoMigrate(&Preset{})
-	db.LogMode(true)
-}
-
-
-func main() {
-    taskRepository := infra.NewPresetRepository(config.NewDB()) //TODO: fix
+    taskRepository := infra.NewPresetRepository(config.NewDB())
     taskUsecase := usecase.NewPresetUsecase(taskRepository)
     taskHandler := handler.NewPresetHandler(taskUsecase)
 
     e := echo.New()
+	// Middleware
+	e.Use(services.Logger)
+	e.Use(middleware.Recover())
     handler.InitRouting(e, taskHandler)
     e.Logger.Fatal(e.Start(":8080"))
 }

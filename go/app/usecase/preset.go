@@ -1,7 +1,7 @@
 package usecase
 
 import (
-    "time"
+    // "time"
 	"ultimate_timer/domain/model"
 	"ultimate_timer/domain/repository"
 )
@@ -12,7 +12,7 @@ type PresetUsecase interface {
 		name string,
 		displayOrder, loopCount int,
 		waitsConfirmEach, waitsConfirmLast bool,
-		timerUnits []model.TimerUnit) (*model.Preset, error)
+		timerUnits []struct{}) (*model.Preset, error)
     Get() ([]*model.Preset, error)
 	FindByID(id string) (*model.Preset, error)
 	Update(
@@ -38,7 +38,12 @@ func (pr *presetUsecase) Create(
 	name string,
 	displayOrder, loopCount int,
 	waitsConfirmEach, waitsConfirmLast bool,
-	timerUnits []model.TimerUnit) (*model.Preset, error) {
+	timerUnits []struct{}) (*model.Preset, error) {
+
+	newTu := []model.TimerUnit{}
+	for tu := range timerUnits {
+		newTu = append(newTu, model.TimerUnit{Duration: tu.Duration, Order: tu.Order})
+	}
 
 	preset, err := model.NewPreset(
 		name,
@@ -46,7 +51,7 @@ func (pr *presetUsecase) Create(
 		loopCount,
 		waitsConfirmEach,
 		waitsConfirmLast,
-		timerUnits,
+		newTu,
 	)
 	if err != nil {
 		return nil, err
@@ -90,7 +95,7 @@ func (pr *presetUsecase) Update(
 		return nil, err
 	}
 
-	err = preset.Set(id, name, displayOrder, loopCount, waitsConfirmEach, waitsConfirmLast, timerUnits)
+	err = preset.Set(name, displayOrder, loopCount, waitsConfirmEach, waitsConfirmLast, timerUnits)
 	if err != nil {
 		return nil, err
 	}

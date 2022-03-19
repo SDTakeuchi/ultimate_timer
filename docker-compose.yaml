@@ -23,7 +23,7 @@ services:
         ports:
             - "8080:8080"
         volumes:
-            - ./go/app:/go/src/app/
+            - ./go/app:/go/app/
         depends_on:
             - db
     # nginx:

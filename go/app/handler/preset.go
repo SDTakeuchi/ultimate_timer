@@ -2,13 +2,13 @@ package handler
 
 import (
 	"net/http"
-	"strconv"
+	// "strconv"
 	"time"
 
-	"app/usecase"
+	"ultimate_timer/usecase"
 
 	"github.com/labstack/echo"
-	null "gopkg.in/guregu/null.v4"
+	// null "gopkg.in/guregu/null.v4"
 )
 
 // PresetHandler preset handlerのinterface
@@ -76,7 +76,7 @@ func (ph *presetHandler) Post() echo.HandlerFunc {
 
 		res := responsePreset{
 			ID:               createdPreset.ID,
-			Name:             createdPreset.DisplayOrder,
+			Name:             createdPreset.Name,
 			LoopCount:        createdPreset.LoopCount,
 			WaitsConfirmEach: createdPreset.WaitsConfirmEach,
 			WaitsConfirmLast: createdPreset.WaitsConfirmLast,
@@ -94,29 +94,27 @@ func (ih *presetHandler) Get() echo.HandlerFunc {
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
 		}
-		var res []responsePreset
-		for p := range foundPresets {
-			pl := p{
-				ID:               foundPresets.ID,
-				Name:             foundPresets.Name,
-				LoopCount:        foundPresets.LoopCount,
-				WaitsConfirmEach: foundPresets.WaitsConfirmEach,
-				WaitsConfirmLast: foundPresets.WaitsConfirmLast,
-				TimerUnits:       foundPresets.TimerUnits,
-			}
-			res = append(res, pl)
-		}
-		return c.JSON(http.StatusOK, res)
+		// TODO: Want to map data to response struct
+		// var res []responsePreset
+		// for p := range foundPresets {
+		// 	pl := p{
+		// 		ID:               foundPresets.ID,
+		// 		Name:             foundPresets.Name,
+		// 		LoopCount:        foundPresets.LoopCount,
+		// 		WaitsConfirmEach: foundPresets.WaitsConfirmEach,
+		// 		WaitsConfirmLast: foundPresets.WaitsConfirmLast,
+		// 		TimerUnits:       foundPresets.TimerUnits,
+		// 	}
+		// 	res = append(res, pl)
+		// }
+		return c.JSON(http.StatusOK, foundPresets)
 	}
 }
 
 // Get presetを取得するときのハンドラー
 func (ph *presetHandler) FindByID() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id, err := c.Param("id")
-		if err != nil {
-			return c.JSON(http.StatusBadRequest, err.Error())
-		}
+		id := c.Param("id")
 		foundPreset, err := ph.presetUsecase.FindByID(id)
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
@@ -136,10 +134,11 @@ func (ph *presetHandler) FindByID() echo.HandlerFunc {
 // Put presetを更新するときのハンドラー
 func (ph *presetHandler) Put() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id, err := c.Param("id")
-		if err != nil {
-			return c.JSON(http.StatusBadRequest, err.Error())
-		}
+		id := c.Param("id")
+		// TODO: What if there is no id in param??
+		// if err != nil {
+		// 	return c.JSON(http.StatusBadRequest, err.Error())
+		// }
 
 		var req requestPreset
 		if err := c.Bind(&req); err != nil {
@@ -175,10 +174,11 @@ func (ph *presetHandler) Put() echo.HandlerFunc {
 // Delete presetを削除するときのハンドラー
 func (th *presetHandler) Delete() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id, err := c.Param("id")
-		if err != nil {
-			return c.JSON(http.StatusBadRequest, err.Error())
-		}
+		id := c.Param("id")
+		// TODO: what if there is no id ?
+		// if err != nil {
+		// 	return c.JSON(http.StatusBadRequest, err.Error())
+		// }
 
 		err = th.presetUsecase.Delete(id)
 		if err != nil {

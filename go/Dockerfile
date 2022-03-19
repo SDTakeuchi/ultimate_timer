@@ -1,11 +1,11 @@
 FROM golang:1.17.8-stretch
 
-WORKDIR /go/src/app
+WORKDIR /go/app
 
 RUN export GO111MODULE=auto \
 && apt-get update
 
-COPY ./app/main.go .
+COPY ./app .
 
 RUN go mod init ultimate_timer \
 && go get . \
