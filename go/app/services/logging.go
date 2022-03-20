@@ -28,7 +28,6 @@ func logFormat() string {
 	format += "cache:-\t"
 	format += "runtime:-\t"
 	format += "apptime:-\t"
-	format += "vhost:${host}\t"
 	format += "reqtime_human:${latency_human}\t"
 	format += "x-request-id:${id}\t"
 	format += "host:${host}\n"

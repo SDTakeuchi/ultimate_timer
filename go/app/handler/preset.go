@@ -62,10 +62,10 @@ func (ph *presetHandler) Post() echo.HandlerFunc {
 		if err := c.Bind(&req); err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
 		}
-		var a []map[string]int
+		var tuMap []map[string]int
 		for _, b := range req.TimerUnits {
-			m := services.StructToMap(b)
-			a = append(a, m)
+			m := services.StructToMapInt(b)
+			tuMap = append(tuMap, m)
 		}
 
 		createdPreset, err := ph.presetUsecase.Create(
@@ -74,7 +74,7 @@ func (ph *presetHandler) Post() echo.HandlerFunc {
 			req.LoopCount,
 			req.WaitsConfirmEach,
 			req.WaitsConfirmLast,
-			a,
+			tuMap,
 		)
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
@@ -150,10 +150,10 @@ func (ph *presetHandler) Put() echo.HandlerFunc {
 		if err := c.Bind(&req); err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
 		}
-		var a []map[string]int
+		var tuMap []map[string]int
 		for _, b := range req.TimerUnits {
-			m := services.StructToMap(b)
-			a = append(a, m)
+			m := services.StructToMapInt(b)
+			tuMap = append(tuMap, m)
 		}
 
 		updatedPreset, err := ph.presetUsecase.Update(
@@ -163,7 +163,7 @@ func (ph *presetHandler) Put() echo.HandlerFunc {
 			req.LoopCount,
 			req.WaitsConfirmEach,
 			req.WaitsConfirmLast,
-			a,
+			tuMap,
 		)
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())

@@ -1,6 +1,6 @@
-FROM golang:1.17.8-stretch
+FROM golang:1.18.0-stretch
 
-WORKDIR /go/app
+WORKDIR /go/ultimate_timer
 
 RUN export GO111MODULE=auto \
 && apt-get update
@@ -8,7 +8,6 @@ RUN export GO111MODULE=auto \
 COPY ./app .
 
 RUN go mod init ultimate_timer \
-&& go mod tidy \
 && go get . \
 && go build
 
