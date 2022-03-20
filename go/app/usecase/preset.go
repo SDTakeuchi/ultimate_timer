@@ -41,9 +41,9 @@ func (pr *presetUsecase) Create(
 	waitsConfirmEach, waitsConfirmLast bool,
 	timerUnits []map[string]int) (*model.Preset, error) {
 
-	newTu := []model.TimerUnit{}
+	tuMap := []model.TimerUnit{}
 	for _, tu := range timerUnits {
-		newTu = append(newTu, model.TimerUnit{Duration: tu["Duration"], Order: tu["Order"]})
+		tuMap = append(tuMap, model.TimerUnit{Duration: tu["Duration"], Order: tu["Order"]})
 	}
 
 	preset, err := model.NewPreset(
@@ -52,12 +52,11 @@ func (pr *presetUsecase) Create(
 		loopCount,
 		waitsConfirmEach,
 		waitsConfirmLast,
-		newTu,
+		tuMap,
 	)
 	if err != nil {
 		return nil, err
 	}
-	preset.TimerUnits = newTu
 
 	createdPreset, err := pr.presetRepo.Create(preset)
 	if err != nil {
@@ -68,8 +67,8 @@ func (pr *presetUsecase) Create(
 }
 
 // FindByID presetをIDで取得するときのユースケース
-func (iu *presetUsecase) FindByID(id string) (*model.Preset, error) {
-	preset, err := iu.presetRepo.FindByID(id)
+func (pr *presetUsecase) FindByID(id string) (*model.Preset, error) {
+	preset, err := pr.presetRepo.FindByID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -97,12 +96,12 @@ func (pr *presetUsecase) Update(
 		return nil, err
 	}
 
-	newTu := []model.TimerUnit{}
+	tuMap := []model.TimerUnit{}
 	for _, tu := range timerUnits {
-		newTu = append(newTu, model.TimerUnit{Duration: tu["Duration"], Order: tu["Order"]})
+		tuMap = append(tuMap, model.TimerUnit{Duration: tu["Duration"], Order: tu["Order"]})
 	}
 
-	err = preset.Set(name, displayOrder, loopCount, waitsConfirmEach, waitsConfirmLast, newTu)
+	err = preset.Set(name, displayOrder, loopCount, waitsConfirmEach, waitsConfirmLast, tuMap)
 	if err != nil {
 		return nil, err
 	}

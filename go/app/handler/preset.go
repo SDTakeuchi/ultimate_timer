@@ -63,8 +63,8 @@ func (ph *presetHandler) Post() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, err.Error())
 		}
 		var tuMap []map[string]int
-		for _, b := range req.TimerUnits {
-			m := services.StructToMapInt(b)
+		for _, tu := range req.TimerUnits {
+			m := services.StructToMapInt(tu)
 			tuMap = append(tuMap, m)
 		}
 
@@ -120,7 +120,7 @@ func (ih *presetHandler) Get() echo.HandlerFunc {
 // Get presetを取得するときのハンドラー
 func (ph *presetHandler) FindByID() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id := c.Param("id")
+		id := c.Param("id").MustString()
 		foundPreset, err := ph.presetUsecase.FindByID(id)
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
@@ -140,7 +140,7 @@ func (ph *presetHandler) FindByID() echo.HandlerFunc {
 // Put presetを更新するときのハンドラー
 func (ph *presetHandler) Put() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id := c.Param("id")
+		id := c.Param("id").MustString()
 		// TODO: What if there is no id in param??
 		// if err != nil {
 		// 	return c.JSON(http.StatusBadRequest, err.Error())
@@ -151,8 +151,8 @@ func (ph *presetHandler) Put() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, err.Error())
 		}
 		var tuMap []map[string]int
-		for _, b := range req.TimerUnits {
-			m := services.StructToMapInt(b)
+		for _, tu := range req.TimerUnits {
+			m := services.StructToMapInt(tu)
 			tuMap = append(tuMap, m)
 		}
 
@@ -185,7 +185,7 @@ func (ph *presetHandler) Put() echo.HandlerFunc {
 // Delete presetを削除するときのハンドラー
 func (th *presetHandler) Delete() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id := c.Param("id")
+		id := c.Param("id").MustString()
 		// TODO: what if there is no id ?
 		// if err != nil {
 		// 	return c.JSON(http.StatusBadRequest, err.Error())
