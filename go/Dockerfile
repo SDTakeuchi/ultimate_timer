@@ -8,6 +8,7 @@ RUN export GO111MODULE=auto \
 COPY ./app .
 
 RUN go mod init ultimate_timer \
+&& go mod tidy \
 && go get . \
 && go build
 

@@ -46,7 +46,7 @@ func NewPreset(
 		LoopCount:        loopCount,
 		WaitsConfirmEach: waitsConfirmEach,
 		WaitsConfirmLast: waitsConfirmLast,
-		TimerUnits:        timerUnits,
+		TimerUnits:       timerUnits,
 	}
 
 	return preset, nil

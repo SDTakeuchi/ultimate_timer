@@ -1,23 +1,20 @@
 package main
 
 import (
-	"ultimate_timer/services"
-	"github.com/labstack/echo"
-	"net/http"
-	"github.com/labstack/echo/middleware"
-	"ultimate_timer/domain/model"
-	"ultimate_timer/domain/repository"
-	"ultimate_timer/usecase"
-	"ultimate_timer/infra"
-	"ultimate_timer/handler"
 	"ultimate_timer/config"
+	"ultimate_timer/handler"
+	"ultimate_timer/infra"
+	"ultimate_timer/services"
+	"ultimate_timer/usecase"
+
+	"github.com/labstack/echo"
+	"github.com/labstack/echo/middleware"
 
 	// "errors"
-	"fmt"
-	"time"
+
 	// "encoding/json"
 	// "ultimate_timer/services"
-	"github.com/jinzhu/gorm"
+
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
@@ -79,7 +76,7 @@ func main() {
 
 // type TimerUnit struct {
 // 	Order    int           `json:"order"`
-// 	Duration time.Duration `json:"duration"`
+// 	Duration int `json:"duration"`
 // 	PresetID uint          `json:"-"`			//hides in json response
 // }
 

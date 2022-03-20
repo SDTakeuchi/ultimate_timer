@@ -1,17 +1,13 @@
 package model
 
-import (
-	"time"
-)
-
 type TimerUnit struct {
-	Duration time.Duration `db:"order" json:"duration"`
+	Duration int `db:"order" json:"duration"`
 	Order    int           `db:"duration" json:"order"`
 	PresetID string          `db:"preset_id" json:"-"`			//hides in json response
 }
 
 // constructor
-func NewTimerUnit(duration time.Duration, order int, presetID string) (*TimerUnit, error) {
+func NewTimerUnit(duration int, order int, presetID string) (*TimerUnit, error) {
 	tu := &TimerUnit{
 		Duration: duration,
 		Order:    order,
@@ -22,7 +18,7 @@ func NewTimerUnit(duration time.Duration, order int, presetID string) (*TimerUni
 }
 
 // setter
-func (tu *TimerUnit) Set(duration time.Duration, order int) error {
+func (tu *TimerUnit) Set(duration int, order int) error {
 	tu.Duration = duration
 	tu.Order = order
 

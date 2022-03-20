@@ -12,7 +12,7 @@ type PresetUsecase interface {
 		name string,
 		displayOrder, loopCount int,
 		waitsConfirmEach, waitsConfirmLast bool,
-		timerUnits []struct{}) (*model.Preset, error)
+		timerUnits []map[string]int) (*model.Preset, error)
     Get() ([]*model.Preset, error)
 	FindByID(id string) (*model.Preset, error)
 	Update(
@@ -20,7 +20,7 @@ type PresetUsecase interface {
 		name string,
 		displayOrder, loopCount int,
 		waitsConfirmEach, waitsConfirmLast bool,
-		timerUnits []model.TimerUnit) (*model.Preset, error)
+		timerUnits []map[string]int) (*model.Preset, error)
 	Delete(id string) error
 }
 
@@ -33,16 +33,17 @@ func NewPresetUsecase(presetRepo repository.PresetRepository) PresetUsecase {
 	return &presetUsecase{presetRepo: presetRepo}
 }
 
+
 // Create presetを保存するときのユースケース
 func (pr *presetUsecase) Create(
 	name string,
 	displayOrder, loopCount int,
 	waitsConfirmEach, waitsConfirmLast bool,
-	timerUnits []struct{}) (*model.Preset, error) {
+	timerUnits []map[string]int) (*model.Preset, error) {
 
 	newTu := []model.TimerUnit{}
-	for tu := range timerUnits {
-		newTu = append(newTu, model.TimerUnit{Duration: tu.Duration, Order: tu.Order})
+	for _, tu := range timerUnits {
+		newTu = append(newTu, model.TimerUnit{Duration: tu["Duration"], Order: tu["Order"]})
 	}
 
 	preset, err := model.NewPreset(
@@ -56,6 +57,7 @@ func (pr *presetUsecase) Create(
 	if err != nil {
 		return nil, err
 	}
+	preset.TimerUnits = newTu
 
 	createdPreset, err := pr.presetRepo.Create(preset)
 	if err != nil {
@@ -89,13 +91,18 @@ func (pr *presetUsecase) Update(
 	id,	name string,
 	displayOrder, loopCount int,
 	waitsConfirmEach, waitsConfirmLast bool,
-	timerUnits []model.TimerUnit) (*model.Preset, error) {
+	timerUnits []map[string]int) (*model.Preset, error) {
 	preset, err := pr.presetRepo.FindByID(id)
 	if err != nil {
 		return nil, err
 	}
 
-	err = preset.Set(name, displayOrder, loopCount, waitsConfirmEach, waitsConfirmLast, timerUnits)
+	newTu := []model.TimerUnit{}
+	for _, tu := range timerUnits {
+		newTu = append(newTu, model.TimerUnit{Duration: tu["Duration"], Order: tu["Order"]})
+	}
+
+	err = preset.Set(name, displayOrder, loopCount, waitsConfirmEach, waitsConfirmLast, newTu)
 	if err != nil {
 		return nil, err
 	}
