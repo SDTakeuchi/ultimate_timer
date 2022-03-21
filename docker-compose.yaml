@@ -36,19 +36,18 @@ services:
     #         - "80:80"
     #     depends_on:
     #         - app
-    # frontend:
-    #     build: ./material-kit-react-main
-    #     container_name: frontend_container
-    #     hostname: frontend
-    #     volumes:
-    #         - ./material-kit-react-main/material-kit-react-main:/usr/src/app
-    #         # - ./frontend/personal_page:/usr/src/app
-    #     tty: true
-    #     environment:
-    #         # enables hot reload
-    #         - CHOKIDAR_USEPOLLING=true
-    #     ports:
-    #         - "3000:3000"
+    frontend:
+        build: ./frontend
+        container_name: frontend_ultimate_timer
+        hostname: frontend
+        volumes:
+            - ./frontend/ultimate_timer:/usr/src/app
+        tty: true
+        environment:
+            # enables hot reload
+            - CHOKIDAR_USEPOLLING=true
+        ports:
+            - "3000:3000"
 
 volumes:
     db_volume:

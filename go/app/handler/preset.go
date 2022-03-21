@@ -4,8 +4,8 @@ import (
 	"net/http"
 	// "strconv"
 
-	"ultimate_timer/usecase"
 	"ultimate_timer/services"
+	"ultimate_timer/usecase"
 
 	// "github.com/fatih/structs"
 	"github.com/labstack/echo"
@@ -120,7 +120,7 @@ func (ih *presetHandler) Get() echo.HandlerFunc {
 // Get presetを取得するときのハンドラー
 func (ph *presetHandler) FindByID() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id := c.Param("id").MustString()
+		id := c.Param("id")
 		foundPreset, err := ph.presetUsecase.FindByID(id)
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
@@ -140,11 +140,7 @@ func (ph *presetHandler) FindByID() echo.HandlerFunc {
 // Put presetを更新するときのハンドラー
 func (ph *presetHandler) Put() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id := c.Param("id").MustString()
-		// TODO: What if there is no id in param??
-		// if err != nil {
-		// 	return c.JSON(http.StatusBadRequest, err.Error())
-		// }
+		id := c.Param("id")
 
 		var req requestPreset
 		if err := c.Bind(&req); err != nil {
@@ -185,11 +181,7 @@ func (ph *presetHandler) Put() echo.HandlerFunc {
 // Delete presetを削除するときのハンドラー
 func (th *presetHandler) Delete() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id := c.Param("id").MustString()
-		// TODO: what if there is no id ?
-		// if err != nil {
-		// 	return c.JSON(http.StatusBadRequest, err.Error())
-		// }
+		id := c.Param("id")
 
 		err := th.presetUsecase.Delete(id)
 		if err != nil {
