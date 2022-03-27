@@ -46,6 +46,7 @@ services:
         environment:
             # enables hot reload
             - CHOKIDAR_USEPOLLING=true
+            - WATCHPACK_POLLING=true
         ports:
             - "3000:3000"
 

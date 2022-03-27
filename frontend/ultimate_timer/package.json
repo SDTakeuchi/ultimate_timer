@@ -11,9 +11,12 @@
   "dependencies": {
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
+    "axios": "^0.26.1",
+    "formik": "^2.2.9",
     "next": "12.1.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "ts-node": "^10.7.0"
   },
   "devDependencies": {
     "@types/node": "17.0.21",
