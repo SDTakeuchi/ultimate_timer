@@ -13,5 +13,5 @@ CREATE table presets (
 CREATE table timer_units (
     "order" integer not null,
     duration integer not null,
-    preset_id varchar(32) not null
+    preset_id varchar(36) not null
 );
