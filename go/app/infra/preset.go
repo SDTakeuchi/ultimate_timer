@@ -27,7 +27,7 @@ func (pr *PresetRepository) Create(preset *model.Preset) (*model.Preset, error) 
 }
 
 func (pr *PresetRepository) Get() (presets []*model.Preset, err error) {
-	if err := pr.Conn.Find(&presets).Related(&presets.TimerUnits).Error; err != nil {  // TODO: timer_unit will be empty...
+	if err := pr.Conn.Preload("TimerUnits").Find(&presets).Error; err != nil {
 		return nil, err
 	}
 
