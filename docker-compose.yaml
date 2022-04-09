@@ -15,6 +15,17 @@ services:
             # - ./postgresql/data:/var/lib/postgresql/data/
             - db_volume:/var/lib/postgresql
         restart: always
+    mongo:
+        image: mongo
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: password
+        ports:
+            - 27017:27017
+        volumes:
+            - ./db:/data/db
+            - ./configdb:/data/configdb
     app:
         build: ./go
         container_name: go_app

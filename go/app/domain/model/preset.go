@@ -16,11 +16,6 @@ type Preset struct {
 	TimerUnits       []TimerUnit `db:"timer_unit" json:"timer_unit"`
 }
 
-/*
-constructor is for preparing objects (returns struct and error)
-setter is for updating new objects (returns error if failed to udpate)
-*/
-
 // constructor
 func NewPreset(
 	name string,
