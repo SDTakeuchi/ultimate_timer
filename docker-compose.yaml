@@ -15,17 +15,19 @@ services:
             # - ./postgresql/data:/var/lib/postgresql/data/
             - db_volume:/var/lib/postgresql
         restart: always
-    mongo:
-        image: mongo
-        restart: always
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: password
-        ports:
-            - 27017:27017
-        volumes:
-            - ./db:/data/db
-            - ./configdb:/data/configdb
+
+    # mongo:
+    #     image: mongo
+    #     restart: always
+    #     environment:
+    #         MONGO_INITDB_ROOT_USERNAME: root
+    #         MONGO_INITDB_ROOT_PASSWORD: password
+    #     ports:
+    #         - 27017:27017
+    #     volumes:
+    #         - ./db:/data/db
+    #         - ./configdb:/data/configdb
+
     app:
         build: ./go
         container_name: go_app
@@ -37,16 +39,18 @@ services:
             - ./go/app:/go/app/
         depends_on:
             - db
-    # nginx:
-    #     build: ./nginx
-    #     container_name: nginx_container
-    #     hostname: nginx
-    #     environment:
-    #         - TZ=Asia/Tokyo
-    #     ports:
-    #         - "80:80"
-    #     depends_on:
-    #         - app
+
+    nginx:
+        build: ./nginx
+        container_name: nginx_container_timer
+        hostname: nginx
+        environment:
+            - TZ=Asia/Tokyo
+        ports:
+            - "80:80"
+        depends_on:
+            - app
+
     frontend:
         build: ./frontend
         container_name: frontend_ultimate_timer

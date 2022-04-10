@@ -22,22 +22,23 @@ interface ResPresets {
 export const TimerList: React.FC = () => {
   // const names: string[] = ['Tabata Timer', '9min', '5.5min'];
   const defaultProps: ResPresets[] = [];
-  const [preset, setPreset] = React.useState<ResPresets[]>(defaultProps);
-  const url = 'http://go_app:8080/presets';
+  const [presets, setPresets] = React.useState<ResPresets[]>(defaultProps);
+  const url = 'http://localhost/api/presets/';
 
   React.useEffect(() => {
     axios
       .get<ResPresets[]>(url)
       .then((response) => {
-        setPreset(response.data);
+        console.log(response);
+        setPresets(response.data);
       });
   }, []);
 
-  if (preset) {
+  if (presets) {
     return (<div>
       <Box>
-        {preset.map((value, _) => {
-          return <TimerCard name={value} />
+        {presets.map((preset) => {
+          return <TimerCard name={preset.name} />
         })}
       </Box>
     </div>
