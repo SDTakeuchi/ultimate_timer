@@ -1,3 +1,5 @@
+import Link from 'next/link'
+// import { Link } from "react-router-dom";
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -29,9 +31,11 @@ const useStyles = makeStyles({
 
 interface Props {
   name: string;
+  display_order: number;
+  id: string;
 }
 
-export const TimerCard: React.FC<Props> = ({name}) => {
+export const TimerCard: React.FC<Props> = ({name, display_order, id}) => {
   const classes = useStyles();
 
   return (
@@ -54,9 +58,11 @@ export const TimerCard: React.FC<Props> = ({name}) => {
       </CardContent>
       <CardActions>
         <div className={classes.alignRight}>
-          <IconButton size="medium">
-            <PlayCircleFilledWhiteIcon />
-          </IconButton>
+          <Link href={`/timer/play/${encodeURIComponent(id)}`} passHref>
+            <IconButton size="medium">
+              <PlayCircleFilledWhiteIcon />
+            </IconButton>
+          </Link>
           <IconButton size="medium">
             <EditIcon />
           </IconButton>
