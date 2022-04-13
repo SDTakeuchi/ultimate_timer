@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-// import presetURL from "../../config/settings";
+import presetURL from "../../config/settings";
 import { TimerCard } from './Card';
 import Box from '@material-ui/core/Box';
 
@@ -22,7 +22,7 @@ interface iPresets {
 export const TimerList: React.FC = () => {
   const defaultProps: iPresets[] = [];
   const [presets, setPresets] = React.useState<iPresets[]>(defaultProps);
-  const url = 'http://localhost/api/presets/';
+  const url: string = presetURL;
 
   React.useEffect(() => {
     axios

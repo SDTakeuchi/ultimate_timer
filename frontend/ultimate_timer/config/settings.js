@@ -1,4 +1,4 @@
-const backendBaseURL = "http://go_app:8080/"
+const backendBaseURL = "http://localhost/api/"
 const presetURL = backendBaseURL + "presets/"
 
 export default presetURL

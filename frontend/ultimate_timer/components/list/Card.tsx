@@ -1,6 +1,7 @@
 import Link from 'next/link'
 // import { Link } from "react-router-dom";
 import React from 'react';
+import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -11,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';
 import EditIcon from '@material-ui/icons/Edit';
+import presetURL from '../../config/settings'
 
 
 const useStyles = makeStyles({
@@ -35,8 +37,26 @@ interface Props {
   id: string;
 }
 
-export const TimerCard: React.FC<Props> = ({name, display_order, id}) => {
+interface iDeletedPreset {
+  error: string;
+}
+
+export const TimerCard: React.FC<Props> = ({ name, display_order, id }) => {
   const classes = useStyles();
+
+  const deletePreset(id: string): string => {
+    const deleteURL: string = presetURL + id;
+    axios
+      .delete<iDeletedPreset>(deleteURL)
+      .then((response) => {
+        // check http status
+        // if success
+        // delete preset from list & message "deleted successfully"
+        // else
+        // go off alert
+      });
+    return ""
+  }
 
   return (
     <Card className={classes.root} variant="outlined">
@@ -58,17 +78,25 @@ export const TimerCard: React.FC<Props> = ({name, display_order, id}) => {
       </CardContent>
       <CardActions>
         <div className={classes.alignRight}>
+
           <Link href={`/timer/play/${encodeURIComponent(id)}`} passHref>
             <IconButton size="medium">
               <PlayCircleFilledWhiteIcon />
             </IconButton>
           </Link>
-          <IconButton size="medium">
-            <EditIcon />
-          </IconButton>
-          <IconButton size="medium" className={classes.alignRight}>
-            <DeleteForeverIcon />
-          </IconButton>
+
+          <Link href={`/timer/edit/${encodeURIComponent(id)}`} passHref>
+            <IconButton size="medium">
+              <EditIcon />
+            </IconButton>
+          </Link>
+
+          <Link href={`/timer/delete/${encodeURIComponent(id)}`} passHref>
+            <IconButton size="medium" className={classes.alignRight}>
+              <DeleteForeverIcon />
+            </IconButton>
+          </Link>
+
         </div>
       </CardActions>
     </Card>
