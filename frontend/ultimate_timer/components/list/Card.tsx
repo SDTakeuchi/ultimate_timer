@@ -1,5 +1,4 @@
 import Link from 'next/link'
-// import { Link } from "react-router-dom";
 import React from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,6 +12,12 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';
 import EditIcon from '@material-ui/icons/Edit';
 import presetURL from '../../config/settings'
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 
 const useStyles = makeStyles({
@@ -43,62 +48,92 @@ interface iDeletedPreset {
 
 export const TimerCard: React.FC<Props> = ({ name, display_order, id }) => {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
 
-  const deletePreset(id: string): string => {
+  const handleClickOpen = (): void => {
+    setOpen(true);
+  };
+
+  const handleClose = (): void => {
+    setOpen(false);
+  };
+
+  const deletePreset = (): void => {
     const deleteURL: string = presetURL + id;
     axios
       .delete<iDeletedPreset>(deleteURL)
       .then((response) => {
-        // check http status
-        // if success
-        // delete preset from list & message "deleted successfully"
-        // else
-        // go off alert
+        if (response.status === 204) {
+          // remove object
+          handleClose();  // move below if
+        } else {
+          alert('Delete failed');
+        }
       });
-    return ""
   }
 
   return (
-    <Card className={classes.root} variant="outlined">
-      <CardContent>
-        <Typography className={classes.title} color="textSecondary" gutterBottom>
-          Word of the Day
-        </Typography>
-        <Typography variant="h5" component="h2">
-          {name}
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          adjective
-        </Typography>
-        <Typography variant="body2" component="p">
-          well meaning and kindly.
-          <br />
-          {'"a benevolent smile"'}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <div className={classes.alignRight}>
+    <div>
+      <Card className={classes.root} variant="outlined">
+        <CardContent>
+          <Typography className={classes.title} color="textSecondary" gutterBottom>
+            Word of the Day
+          </Typography>
+          <Typography variant="h5" component="h2">
+            {name}
+          </Typography>
+          <Typography className={classes.pos} color="textSecondary">
+            adjective
+          </Typography>
+          <Typography variant="body2" component="p">
+            well meaning and kindly.
+            <br />
+            {'"a benevolent smile"'}
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <div className={classes.alignRight}>
 
-          <Link href={`/timer/play/${encodeURIComponent(id)}`} passHref>
-            <IconButton size="medium">
-              <PlayCircleFilledWhiteIcon />
-            </IconButton>
-          </Link>
+            <Link href={`/timer/${encodeURIComponent(id)}/play`} passHref>
+              <IconButton size="medium">
+                <PlayCircleFilledWhiteIcon />
+              </IconButton>
+            </Link>
 
-          <Link href={`/timer/edit/${encodeURIComponent(id)}`} passHref>
-            <IconButton size="medium">
-              <EditIcon />
-            </IconButton>
-          </Link>
+            <Link href={`/timer/${encodeURIComponent(id)}/edit`} passHref>
+              <IconButton size="medium">
+                <EditIcon />
+              </IconButton>
+            </Link>
 
-          <Link href={`/timer/delete/${encodeURIComponent(id)}`} passHref>
-            <IconButton size="medium" className={classes.alignRight}>
+            <IconButton size="medium" className={classes.alignRight} onClick={handleClickOpen}>
               <DeleteForeverIcon />
             </IconButton>
-          </Link>
 
-        </div>
-      </CardActions>
-    </Card>
+          </div>
+        </CardActions>
+      </Card>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"タイマーを削除します"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            本当に削除しますか？
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            キャンセル
+          </Button>
+          <Button onClick={deletePreset} color="primary" autoFocus>
+            削除
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   );
 }
