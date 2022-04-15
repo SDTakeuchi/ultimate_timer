@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import React from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -64,16 +64,19 @@ export const TimerCard: React.FC<Props> = ({ name, display_order, id }) => {
       .delete<iDeletedPreset>(deleteURL)
       .then((response) => {
         if (response.status === 204) {
-          // remove object
-          handleClose();  // move below if
+          const deletedTimer: HTMLElement | null = document.getElementById(id);
+          if (deletedTimer !== null) {
+            deletedTimer.remove();
+          }
         } else {
           alert('Delete failed');
         }
+        handleClose();
       });
   }
 
   return (
-    <div>
+    <div className="timer-card" id={id}>
       <Card className={classes.root} variant="outlined">
         <CardContent>
           <Typography className={classes.title} color="textSecondary" gutterBottom>
