@@ -4,6 +4,7 @@ import (
 	"net/http"
 	// "strconv"
 
+	"ultimate_timer/domain/model"
 	"ultimate_timer/services"
 	"ultimate_timer/usecase"
 
@@ -43,16 +44,13 @@ type requestPreset struct {
 }
 
 type responsePreset struct {
-	ID               string `json:"id"`
-	Name             string `json:"name"`
-	DisplayOrder     int    `json:"display_order"`
-	LoopCount        int    `json:"loop_count"`
-	WaitsConfirmEach bool   `json:"waits_confirm_each"`
-	WaitsConfirmLast bool   `json:"waits_confirm_last"`
-	TimerUnits       []struct {
-		Order    int `json:"order"`
-		Duration int `json:"duration"`
-	} `json:"timer_unit"`
+	ID               string            `json:"id"`
+	Name             string            `json:"name"`
+	DisplayOrder     int               `json:"display_order"`
+	LoopCount        int               `json:"loop_count"`
+	WaitsConfirmEach bool              `json:"waits_confirm_each"`
+	WaitsConfirmLast bool              `json:"waits_confirm_last"`
+	TimerUnits       []model.TimerUnit `json:"timer_unit"`
 }
 
 // Post presetを保存するときのハンドラー
@@ -79,41 +77,39 @@ func (ph *presetHandler) Post() echo.HandlerFunc {
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
 		}
+		res := &responsePreset{
+			ID:               createdPreset.ID,
+			Name:             createdPreset.Name,
+			LoopCount:        createdPreset.LoopCount,
+			WaitsConfirmEach: createdPreset.WaitsConfirmEach,
+			WaitsConfirmLast: createdPreset.WaitsConfirmLast,
+			TimerUnits:       createdPreset.TimerUnits,
+		}
 
-		// res := responsePreset{
-		// 	ID:               createdPreset.ID,
-		// 	Name:             createdPreset.Name,
-		// 	LoopCount:        createdPreset.LoopCount,
-		// 	WaitsConfirmEach: createdPreset.WaitsConfirmEach,
-		// 	WaitsConfirmLast: createdPreset.WaitsConfirmLast,
-		// 	TimerUnits:       createdPreset.TimerUnits,
-		// }
-
-		return c.JSON(http.StatusCreated, createdPreset)
+		return c.JSON(http.StatusCreated, res)
 	}
 }
 
 // Get presetを取得するときのハンドラー
-func (ih *presetHandler) Get() echo.HandlerFunc {
+func (ph *presetHandler) Get() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		foundPresets, err := ih.presetUsecase.Get()
+		foundPresets, err := ph.presetUsecase.Get()
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
 		}
-		// TODO: Want to map data to response struct
-		// var res []responsePreset
-		// for p := range foundPresets {
-		// 	pl := p{
-		// 		ID:               foundPresets.ID,
-		// 		Name:             foundPresets.Name,
-		// 		LoopCount:        foundPresets.LoopCount,
-		// 		WaitsConfirmEach: foundPresets.WaitsConfirmEach,
-		// 		WaitsConfirmLast: foundPresets.WaitsConfirmLast,
-		// 		TimerUnits:       foundPresets.TimerUnits,
-		// 	}
-		// 	res = append(res, pl)
-		// }
-		return c.JSON(http.StatusOK, foundPresets)
+		var res []responsePreset
+		for _, fp := range foundPresets {
+			p := responsePreset{
+				ID:               fp.ID,
+				Name:             fp.Name,
+				LoopCount:        fp.LoopCount,
+				WaitsConfirmEach: fp.WaitsConfirmEach,
+				WaitsConfirmLast: fp.WaitsConfirmLast,
+				TimerUnits:       fp.TimerUnits,
+			}
+			res = append(res, p)
+		}
+		return c.JSON(http.StatusOK, res)
 	}
 }
 
@@ -125,15 +121,15 @@ func (ph *presetHandler) FindByID() echo.HandlerFunc {
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
 		}
-		// res := responsePreset{
-		// 	ID:               foundPreset.ID,
-		// 	Name:             foundPreset.Name,
-		// 	LoopCount:        foundPreset.LoopCount,
-		// 	WaitsConfirmEach: foundPreset.WaitsConfirmEach,
-		// 	WaitsConfirmLast: foundPreset.WaitsConfirmLast,
-		// 	TimerUnits:       foundPreset.TimerUnits,
-		// }
-		return c.JSON(http.StatusOK, foundPreset)
+		res := responsePreset{
+			ID:               foundPreset.ID,
+			Name:             foundPreset.Name,
+			LoopCount:        foundPreset.LoopCount,
+			WaitsConfirmEach: foundPreset.WaitsConfirmEach,
+			WaitsConfirmLast: foundPreset.WaitsConfirmLast,
+			TimerUnits:       foundPreset.TimerUnits,
+		}
+		return c.JSON(http.StatusOK, res)
 	}
 }
 
@@ -165,16 +161,16 @@ func (ph *presetHandler) Put() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, err.Error())
 		}
 
-		// res := responsePreset{
-		// 	ID:               updatedPreset.ID,
-		// 	Name:             updatedPreset.Name,
-		// 	LoopCount:        updatedPreset.LoopCount,
-		// 	WaitsConfirmEach: updatedPreset.WaitsConfirmEach,
-		// 	WaitsConfirmLast: updatedPreset.WaitsConfirmLast,
-		// 	TimerUnits:       updatedPreset.TimerUnits,
-		// }
+		res := responsePreset{
+			ID:               updatedPreset.ID,
+			Name:             updatedPreset.Name,
+			LoopCount:        updatedPreset.LoopCount,
+			WaitsConfirmEach: updatedPreset.WaitsConfirmEach,
+			WaitsConfirmLast: updatedPreset.WaitsConfirmLast,
+			TimerUnits:       updatedPreset.TimerUnits,
+		}
 
-		return c.JSON(http.StatusOK, updatedPreset)
+		return c.JSON(http.StatusOK, res)
 	}
 }
 
