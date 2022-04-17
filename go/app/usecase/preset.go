@@ -87,10 +87,10 @@ func (pr *presetUsecase) Get() ([]*model.Preset, error) {
 
 // Update presetを更新するときのユースケース
 func (pr *presetUsecase) Update(
-	id,	name string,
-	displayOrder, loopCount int,
-	waitsConfirmEach, waitsConfirmLast bool,
-	timerUnits []map[string]int) (*model.Preset, error) {
+		id,	name string,
+		displayOrder, loopCount int,
+		waitsConfirmEach, waitsConfirmLast bool,
+		timerUnits []map[string]int) (*model.Preset, error) {
 	preset, err := pr.presetRepo.FindByID(id)
 	if err != nil {
 		return nil, err

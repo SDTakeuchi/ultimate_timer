@@ -13,7 +13,6 @@ import (
 	// null "gopkg.in/guregu/null.v4"
 )
 
-// PresetHandler preset handlerのinterface
 type PresetHandler interface {
 	Post() echo.HandlerFunc
 	Get() echo.HandlerFunc
@@ -26,7 +25,6 @@ type presetHandler struct {
 	presetUsecase usecase.PresetUsecase
 }
 
-// NewPresetHandler preset handlerのコンストラクタ
 func NewPresetHandler(presetUsecase usecase.PresetUsecase) PresetHandler {
 	return &presetHandler{presetUsecase: presetUsecase}
 }
@@ -53,7 +51,6 @@ type responsePreset struct {
 	TimerUnits       []model.TimerUnit `json:"timer_unit"`
 }
 
-// Post presetを保存するときのハンドラー
 func (ph *presetHandler) Post() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var req requestPreset
@@ -90,7 +87,6 @@ func (ph *presetHandler) Post() echo.HandlerFunc {
 	}
 }
 
-// Get presetを取得するときのハンドラー
 func (ph *presetHandler) Get() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		foundPresets, err := ph.presetUsecase.Get()
@@ -113,7 +109,6 @@ func (ph *presetHandler) Get() echo.HandlerFunc {
 	}
 }
 
-// Get presetを取得するときのハンドラー
 func (ph *presetHandler) FindByID() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		id := c.Param("id")
@@ -133,7 +128,6 @@ func (ph *presetHandler) FindByID() echo.HandlerFunc {
 	}
 }
 
-// Put presetを更新するときのハンドラー
 func (ph *presetHandler) Put() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		id := c.Param("id")
@@ -174,7 +168,6 @@ func (ph *presetHandler) Put() echo.HandlerFunc {
 	}
 }
 
-// Delete presetを削除するときのハンドラー
 func (th *presetHandler) Delete() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		id := c.Param("id")
