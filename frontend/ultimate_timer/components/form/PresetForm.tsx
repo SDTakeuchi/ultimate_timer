@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Button, TextField } from '@material-ui/core';
-import { Formik, Form } from 'formik';
+import { Formik, Form, FieldArray, Field } from 'formik';
 import presetURL from '../../config/settings'
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -21,7 +21,7 @@ interface iPresetForm {
   timer_unit: {
     duration: number,
     order: number,
-  },
+  }[],
 }
 
 export const NameForm: React.FC<Props> = ({ onSubmit }) => {
@@ -56,13 +56,12 @@ export const NameForm: React.FC<Props> = ({ onSubmit }) => {
         loop_count: 0,
         display_order: 1,
         waits_confirm_each: false,
-        waits_confirm_last: true,
-        timer_unit: {
-          duration: 0,
-          order: 1,
-        },
+        waits_confirm_last: true
       }}
       onSubmit={values => {
+        console.log(values);
+        // const submitData = JSON.stringify(values, null, 2);
+        // console.log(submitData);
         axios
           .post(presetURL, values)
           .then((response) => {
@@ -141,8 +140,55 @@ export const NameForm: React.FC<Props> = ({ onSubmit }) => {
               />
             </FormGroup>
           </div>
-          
-          <div>
+          <FieldArray
+            name="timer_unit"
+            render={arrayHelpers => (
+              <div>
+                {values.timer_unit && values.timer_unit.length > 0 ? (
+                  values.timer_unit.map((timerUnit, index) => (
+                    <div key={index}>
+                      <TextField
+                        variant="outlined"
+                        label="order"
+                        name={`timer_unit.${index}.order`}  // YEAH
+                        type="number"
+                        // value={values.timer_unit.order}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                      <TextField
+                        variant="outlined"
+                        label="duration"
+                        name={`timer_unit.${index}.duration`}
+                        type="number"
+                        // value={values.timer_unit.duration}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                      <button
+                        type="button"
+                         onClick={() => arrayHelpers.remove(index)} // remove a friend from the list
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                         onClick={() => arrayHelpers.insert(index, '')} // insert an empty string at a position
+                      >
+                        +
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <button type="button" onClick={() => arrayHelpers.push('')}>
+                     {/* show this when user has removed all friends from the list */}
+                    Add a unit
+                  </button>
+                )}
+              </div>
+            )}
+          />
+          {/* <div>
             <TextField
               variant="outlined"
               label="order"
@@ -163,7 +209,7 @@ export const NameForm: React.FC<Props> = ({ onSubmit }) => {
               onChange={handleChange}
               onBlur={handleBlur}
             />
-          </div>
+          </div> */}
           <div>
             <Button
               type="submit"

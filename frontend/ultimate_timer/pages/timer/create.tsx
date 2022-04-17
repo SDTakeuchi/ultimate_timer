@@ -26,7 +26,7 @@ const CreateTimerPage: NextPage = () => {
   return <div>
     <Head />
     <NameForm onSubmit={({ name }) => {
-      console.log('YAY' + name);
+      console.log(name);
     }} />
     <Button onClick={createPreset}>Create Preset</Button>
   </div>
