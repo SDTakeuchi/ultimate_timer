@@ -6,7 +6,7 @@ import presetURL from '../../config/settings'
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-
+import { Navigate } from 'react-router-dom'
 
 interface Props {
   onSubmit: (values: iPresetForm) => void;
@@ -34,21 +34,6 @@ export const NameForm: React.FC<Props> = ({ onSubmit }) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
-  const postPreset = () => {
-    axios
-      .post(presetURL, {
-      })
-      .then((response) => {
-        console.log(response);
-        console.log(response.data);
-        alert('preset created!');
-      })
-      .catch((response) => {
-        console.log(response);
-        console.log(response.data);
-      });
-  };
-
   return (
     <Formik
       initialValues={{
@@ -67,6 +52,7 @@ export const NameForm: React.FC<Props> = ({ onSubmit }) => {
           .then((response) => {
             console.log(response);
             console.log(response.data);
+            return <Navigate replace to="/timer" />;
             alert('preset created!');
           })
           .catch((response) => {
@@ -215,7 +201,6 @@ export const NameForm: React.FC<Props> = ({ onSubmit }) => {
               type="submit"
               variant="contained"
               color="primary"
-              // onClick={postPreset}
             >
               Submit
             </Button>
