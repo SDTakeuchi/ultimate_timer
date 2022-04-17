@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Button, TextField } from '@material-ui/core';
-import { Formik, Form, FieldArray, Field } from 'formik';
+import { Formik, Form, FieldArray } from 'formik';
 import presetURL from '../../config/settings'
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -44,9 +44,6 @@ export const NameForm: React.FC<Props> = ({ onSubmit }) => {
         waits_confirm_last: true
       }}
       onSubmit={values => {
-        console.log(values);
-        // const submitData = JSON.stringify(values, null, 2);
-        // console.log(submitData);
         axios
           .post(presetURL, values)
           .then((response) => {
@@ -59,7 +56,6 @@ export const NameForm: React.FC<Props> = ({ onSubmit }) => {
             console.log(response);
             console.log(response.data);
           });
-        onSubmit(values);
       }}
     >
       {({ values, handleChange, handleBlur }) => (
@@ -153,13 +149,13 @@ export const NameForm: React.FC<Props> = ({ onSubmit }) => {
                       />
                       <button
                         type="button"
-                         onClick={() => arrayHelpers.remove(index)} // remove a friend from the list
+                         onClick={() => arrayHelpers.remove(index)}
                       >
                         -
                       </button>
                       <button
                         type="button"
-                         onClick={() => arrayHelpers.insert(index, '')} // insert an empty string at a position
+                         onClick={() => arrayHelpers.insert(index, '')}
                       >
                         +
                       </button>
@@ -174,28 +170,6 @@ export const NameForm: React.FC<Props> = ({ onSubmit }) => {
               </div>
             )}
           />
-          {/* <div>
-            <TextField
-              variant="outlined"
-              label="order"
-              name="timer_unit.order"  // YEAH
-              type="number"
-              value={values.timer_unit.order}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-          </div>
-          <div>
-            <TextField
-              variant="outlined"
-              label="duration"
-              name="timer_unit.duration"
-              type="number"
-              value={values.timer_unit.duration}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-          </div> */}
           <div>
             <Button
               type="submit"
