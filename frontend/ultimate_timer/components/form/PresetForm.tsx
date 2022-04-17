@@ -14,19 +14,20 @@ interface Props {
 
 interface iPresetForm {
   name: string,
-  loopCount: number,
-  waitsConfirmEach: boolean,
-  waitsConfirmLast: boolean,
-  // timerUnit: {
-  //   durations: number,
-  //   order: number,
-  // }[],
+  loop_count: number,
+  display_order: number,
+  waits_confirm_each: boolean,
+  waits_confirm_last: boolean,
+  timer_unit: {
+    duration: number,
+    order: number,
+  },
 }
 
 export const NameForm: React.FC<Props> = ({ onSubmit }) => {
   const [state, setState] = React.useState({
-    waitsConfirmEach: false,
-    waitsConfirmLast: true,
+    waits_confirm_each: false,
+    waits_confirm_last: true,
   });
 
   const handleChangeSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,24 +37,43 @@ export const NameForm: React.FC<Props> = ({ onSubmit }) => {
   const postPreset = () => {
     axios
       .post(presetURL, {
-        // name: value.name,
-        loop_count: "This is a new post."
       })
-      .then(() => {
+      .then((response) => {
+        console.log(response);
+        console.log(response.data);
         alert('preset created!');
       })
-      .catch(() => { });
+      .catch((response) => {
+        console.log(response);
+        console.log(response.data);
+      });
   };
 
   return (
     <Formik
       initialValues={{
         name: '' ,
-        loopCount: 0,
-        waitsConfirmEach: false,
-        waitsConfirmLast: true
+        loop_count: 0,
+        display_order: 1,
+        waits_confirm_each: false,
+        waits_confirm_last: true,
+        timer_unit: {
+          duration: 0,
+          order: 1,
+        },
       }}
       onSubmit={values => {
+        axios
+          .post(presetURL, values)
+          .then((response) => {
+            console.log(response);
+            console.log(response.data);
+            alert('preset created!');
+          })
+          .catch((response) => {
+            console.log(response);
+            console.log(response.data);
+          });
         onSubmit(values);
       }}
     >
@@ -73,9 +93,20 @@ export const NameForm: React.FC<Props> = ({ onSubmit }) => {
             <TextField
               variant="outlined"
               label="loop count"
-              name="loopCount"
+              name="loop_count"
               type="number"
-              value={values.loopCount}
+              value={values.loop_count}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </div>
+          <div>
+            <TextField
+              variant="outlined"
+              label="display order"
+              name="display_order"
+              type="number"
+              value={values.display_order}
               onChange={handleChange}
               onBlur={handleBlur}
             />
@@ -85,11 +116,11 @@ export const NameForm: React.FC<Props> = ({ onSubmit }) => {
               <FormControlLabel
                 control={
                   <Switch
-                    checked={state.waitsConfirmEach}
+                    checked={state.waits_confirm_each}
                     onChange={handleChangeSwitch}
                     color="primary"
-                    name="waitsConfirmEach"
-                    value={values.waitsConfirmEach}
+                    name="waits_confirm_each"
+                    value={values.waits_confirm_each}
                     inputProps={{ 'aria-label': 'primary checkbox' }}
                   />
                 }
@@ -98,11 +129,11 @@ export const NameForm: React.FC<Props> = ({ onSubmit }) => {
               <FormControlLabel
                 control={
                   <Switch
-                    checked={state.waitsConfirmLast}
+                    checked={state.waits_confirm_last}
                     onChange={handleChangeSwitch}
                     color="primary"
-                    name="waitsConfirmLast"
-                    value={values.waitsConfirmLast}
+                    name="waits_confirm_last"
+                    value={values.waits_confirm_last}
                     inputProps={{ 'aria-label': 'primary checkbox' }}
                   />
                 }
@@ -110,12 +141,35 @@ export const NameForm: React.FC<Props> = ({ onSubmit }) => {
               />
             </FormGroup>
           </div>
+          
+          <div>
+            <TextField
+              variant="outlined"
+              label="order"
+              name="timer_unit.order"  // YEAH
+              type="number"
+              value={values.timer_unit.order}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </div>
+          <div>
+            <TextField
+              variant="outlined"
+              label="duration"
+              name="timer_unit.duration"
+              type="number"
+              value={values.timer_unit.duration}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </div>
           <div>
             <Button
               type="submit"
               variant="contained"
               color="primary"
-              onClick={postPreset}
+              // onClick={postPreset}
             >
               Submit
             </Button>

@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 
 
 const CreateTimerPage: NextPage = () => {
-  const postUrl = presetURL + 'create/'
+  const postUrl = presetURL
 
   function createPreset() {
     axios
@@ -19,13 +19,14 @@ const CreateTimerPage: NextPage = () => {
       .then(() => {
         alert('preset created!');
       })
-      .catch(() => { });
+      .catch(() => {
+        alert('ugh');});
   }
 
   return <div>
     <Head />
-    <NameForm onSubmit={({ timerName }) => {
-      console.log(timerName);
+    <NameForm onSubmit={({ name }) => {
+      console.log('YAY' + name);
     }} />
     <Button onClick={createPreset}>Create Preset</Button>
   </div>

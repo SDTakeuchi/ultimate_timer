@@ -13,7 +13,7 @@ services:
             TZ: "Asia/Tokyo"
         volumes:
             # - ./postgresql/data:/var/lib/postgresql/data/
-            - db_volume:/var/lib/postgresql
+            - timer_preset_volume:/var/lib/postgresql/data/
         restart: always
 
     # mongo:
@@ -66,4 +66,4 @@ services:
             - "3000:3000"
 
 volumes:
-    db_volume:
+    timer_preset_volume:
