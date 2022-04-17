@@ -1,4 +1,4 @@
-CREATE table presets (
+CREATE TABLE IF NOT EXISTS presets (
     id varchar(32) not null,
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
@@ -9,8 +9,7 @@ CREATE table presets (
     waits_confirm_last boolean not null
 );
 
-
-CREATE table timer_units (
+CREATE TABLE IF NOT EXISTS timer_units (
     "order" integer not null,
     duration integer not null,
     preset_id varchar(36) not null
