@@ -1,9 +1,9 @@
 package model
 
 type TimerUnit struct {
-	Duration int `db:"order" json:"duration"`
-	Order    int           `db:"duration" json:"order"`
-	PresetID string          `db:"preset_id" json:"-"`			//hides in json response
+	Duration int    `db:"order" json:"duration"`
+	Order    int    `db:"duration" json:"order"`
+	PresetID string `db:"preset_id" json:"-"`
 }
 
 // constructor
