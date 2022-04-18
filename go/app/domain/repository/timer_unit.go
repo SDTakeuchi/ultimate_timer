@@ -4,7 +4,6 @@ import (
     "ultimate_timer/domain/model"
 )
 
-// TaskRepository task repositoryのinterface
 type TimerUnitRepository interface {
     Create(timerUnit *model.TimerUnit) (*model.TimerUnit, error)
     FindByPresetID(id string) ([]*model.TimerUnit, error)
