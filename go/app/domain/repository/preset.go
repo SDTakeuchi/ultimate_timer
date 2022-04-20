@@ -4,7 +4,6 @@ import (
     "ultimate_timer/domain/model"
 )
 
-// TaskRepository task repositoryのinterface
 type PresetRepository interface {
     Create(preset *model.Preset) (*model.Preset, error)
     Get() ([]*model.Preset, error)

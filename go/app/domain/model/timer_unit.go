@@ -1,12 +1,11 @@
 package model
 
 type TimerUnit struct {
-	Duration int `db:"order" json:"duration"`
-	Order    int           `db:"duration" json:"order"`
-	PresetID string          `db:"preset_id" json:"-"`			//hides in json response
+	Duration int    `db:"order" json:"duration"`
+	Order    int    `db:"duration" json:"order"`
+	PresetID string `db:"preset_id" json:"-"`
 }
 
-// constructor
 func NewTimerUnit(duration int, order int, presetID string) (*TimerUnit, error) {
 	tu := &TimerUnit{
 		Duration: duration,
@@ -17,7 +16,7 @@ func NewTimerUnit(duration int, order int, presetID string) (*TimerUnit, error) 
 	return tu, nil
 }
 
-// setter
+// TaskRepository task repositoryのinterface
 func (tu *TimerUnit) Set(duration int, order int) error {
 	tu.Duration = duration
 	tu.Order = order

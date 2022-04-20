@@ -16,7 +16,6 @@ type Preset struct {
 	TimerUnits       []TimerUnit `db:"timer_unit" json:"timer_unit"`
 }
 
-// constructor
 func NewPreset(
 	name string,
 	displayOrder, loopCount int,
@@ -47,7 +46,6 @@ func NewPreset(
 	return preset, nil
 }
 
-// setter
 func (p *Preset) Set(
 	name string,
 	displayOrder, loopCount int,
