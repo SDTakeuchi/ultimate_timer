@@ -3,22 +3,33 @@ package infra
 import (
 	"ultimate_timer/domain/model"
 	"ultimate_timer/domain/repository"
-
+	"encoding/json"
+	"context"
+	"time"
 	"github.com/jinzhu/gorm"
+	"github.com/go-redis/redis/v8"
 )
 
 type PresetRepository struct {
 	Conn *gorm.DB
+	Cache *redis.Client
 }
 
-func NewPresetRepository(conn *gorm.DB) repository.PresetRepository {
-	return &PresetRepository{Conn: conn}
+func NewPresetRepository(conn *gorm.DB, cache *redis.Client) repository.PresetRepository {
+	return &PresetRepository{Conn: conn, Cache: cache}
 }
 
 func (pr *PresetRepository) Create(preset *model.Preset) (*model.Preset, error) {
-	// if err := pr.Conn.NewRecord(&preset); err != nil {
-	// 	return nil, err
-	// }
+	// redis
+	p, err := json.Marshal(&preset)
+	if err != nil {
+		return nil, err
+	}
+	err = pr.Cache.Set(context.Background(), preset.ID, p, time.Hour*24).Err()
+	if err != nil {
+		return nil, err
+	}
+	// end redis
 	if err := pr.Conn.Create(&preset).Error; err != nil {
 		return nil, err
 	}
@@ -35,12 +46,25 @@ func (pr *PresetRepository) Get() (presets []*model.Preset, err error) {
 }
 
 func (pr *PresetRepository) FindByID(id string) (*model.Preset, error) {
-	preset := &model.Preset{BaseModel: model.BaseModel{ID: id}}
-	if err := pr.Conn.First(&preset).Related(&preset.TimerUnits).Error; err != nil {
+	p, err := pr.Cache.Get(context.Background(), id).Result()
+	if err == redis.Nil {
+		preset := &model.Preset{BaseModel: model.BaseModel{ID: id}}
+		if err := pr.Conn.First(&preset).Related(&preset.TimerUnits).Error; err != nil {
+			return nil, err
+		}
+	
+		return preset, nil
+	} else if err != nil {
 		return nil, err
-	}
+	} else {
+		preset := &model.Preset{}
+		err = json.Unmarshal([]byte(p), preset)
+		if err != nil {
+			return nil, err
+		}
 
-	return preset, nil
+		return preset, nil
+	}
 }
 
 func (pr *PresetRepository) Update(preset *model.Preset) (*model.Preset, error) {

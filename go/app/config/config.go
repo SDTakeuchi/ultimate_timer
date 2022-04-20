@@ -5,9 +5,11 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+const DbConfig = "host=db port=5432 user=postgres dbname=postgres password=postgres sslmode=disable"
+
 // NewDB DBと接続する
 func NewDB() *gorm.DB {
-	db, err := gorm.Open("postgres", "host=db port=5432 user=postgres dbname=postgres password=postgres sslmode=disable")
+	db, err := gorm.Open("postgres", DbConfig)
 	if err != nil {
 		panic(err.Error())
 	}

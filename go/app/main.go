@@ -20,7 +20,7 @@ import (
 
 
 func main() {
-    taskRepository := infra.NewPresetRepository(config.NewDB())
+    taskRepository := infra.NewPresetRepository(config.NewDB(), config.SetupRedis())
     taskUsecase := usecase.NewPresetUsecase(taskRepository)
     taskHandler := handler.NewPresetHandler(taskUsecase)
 

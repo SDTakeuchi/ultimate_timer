@@ -17,6 +17,14 @@ services:
             - ./postgres/create_tables1.sql:/docker-entrypoint-initdb.d/create_tables1.sql
         restart: always
 
+    redis:
+        image: redis:6-alpine3.15
+        hostname: redis_timer_presets
+        ports:
+        - "6379:6379"
+        volumes:
+        - timer_preset_volume:/data
+
     # mongo:
     #     image: mongo
     #     restart: always
