@@ -4,9 +4,9 @@ import (
     // "time"
 	"ultimate_timer/domain/model"
 	"ultimate_timer/domain/repository"
+	"ultimate_timer/services"
 )
 
-// interface of PresetUsecase preset usecase
 type PresetUsecase interface {
 	Create(
 		name string,
@@ -28,13 +28,10 @@ type presetUsecase struct {
 	presetRepo repository.PresetRepository
 }
 
-// NewPresetUsecase preset usecaseのコンストラクタ
 func NewPresetUsecase(presetRepo repository.PresetRepository) PresetUsecase {
 	return &presetUsecase{presetRepo: presetRepo}
 }
 
-
-// Create presetを保存するときのユースケース
 func (pr *presetUsecase) Create(
 	name string,
 	displayOrder, loopCount int,
@@ -66,7 +63,6 @@ func (pr *presetUsecase) Create(
 	return createdPreset, nil
 }
 
-// FindByID presetをIDで取得するときのユースケース
 func (pr *presetUsecase) FindByID(id string) (*model.Preset, error) {
 	preset, err := pr.presetRepo.FindByID(id)
 	if err != nil {
@@ -85,7 +81,6 @@ func (pr *presetUsecase) Get() ([]*model.Preset, error) {
 	return presets, nil
 }
 
-// Update presetを更新するときのユースケース
 func (pr *presetUsecase) Update(
 		id,	name string,
 		displayOrder, loopCount int,
@@ -114,7 +109,6 @@ func (pr *presetUsecase) Update(
 	return updatedPreset, nil
 }
 
-// Delete presetを削除するときのユースケース
 func (pr *presetUsecase) Delete(id string) error {
 	preset, err := pr.presetRepo.FindByID(id)
 	if err != nil {
