@@ -6,7 +6,7 @@ import (
 
 const RedisAddr = "redis_timer_presets:6379"
 
-func SetupRedis() *redis.Client {
+func NewRedis() *redis.Client {
 	return redis.NewClient(&redis.Options{
 		Addr: RedisAddr,
 		DB:   0,
