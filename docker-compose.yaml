@@ -21,9 +21,10 @@ services:
         image: redis:6-alpine3.15
         hostname: redis_timer_presets
         ports:
-        - "6379:6379"
+            - "6379:6379"
         volumes:
-        - timer_preset_volume:/data
+            - timer_preset_volume:/data
+            - ./redis:/usr/local/etc/
 
     # mongo:
     #     image: mongo
@@ -34,8 +35,8 @@ services:
     #     ports:
     #         - 27017:27017
     #     volumes:
-    #         - ./db:/data/db
-    #         - ./configdb:/data/configdb
+    #         - ./mongodb/db:/data/db
+    #         - ./mongodb/configdb:/data/configdb
 
     app:
         build: ./go
