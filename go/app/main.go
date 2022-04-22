@@ -25,7 +25,6 @@ func main() {
     taskHandler := handler.NewPresetHandler(taskUsecase)
 
     e := echo.New()
-	// Middleware
 	e.Use(services.Logger)
 	e.Use(middleware.Recover())
     handler.InitRouting(e, taskHandler)
