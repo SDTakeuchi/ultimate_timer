@@ -10,4 +10,7 @@ type PresetRepository interface {
     FindByID(id string) (*model.Preset, error)
     Update(preset *model.Preset) (*model.Preset, error)
     Delete(preset *model.Preset) error
+
+    GetCacheById(id string) (*model.Preset, error)
+    SetCache(preset *model.Preset) error
 }

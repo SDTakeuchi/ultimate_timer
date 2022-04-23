@@ -1,9 +1,9 @@
 package infra
 
 import (
-	"context"
-	"encoding/json"
-	"time"
+	// "context"
+	// "encoding/json"
+	// "time"
 	"github.com/jinzhu/gorm"
 	"github.com/go-redis/redis/v8"
 	"ultimate_timer/domain/model"
@@ -20,16 +20,7 @@ func NewPresetRepository(conn *gorm.DB, cache *redis.Client) repository.PresetRe
 }
 
 func (pr *PresetRepository) Create(preset *model.Preset) (*model.Preset, error) {
-	// redis
-	p, err := json.Marshal(&preset)
-	if err != nil {
-		return nil, err
-	}
-	err = pr.Cache.Set(context.Background(), preset.ID, p, time.Hour*24).Err()
-	if err != nil {
-		return nil, err
-	}
-	// end redis
+	go pr.SetCache(preset)
 	if err := pr.Conn.Create(&preset).Error; err != nil {
 		return nil, err
 	}
@@ -46,25 +37,45 @@ func (pr *PresetRepository) Get() (presets []*model.Preset, err error) {
 }
 
 func (pr *PresetRepository) FindByID(id string) (*model.Preset, error) {
-	p, err := pr.Cache.Get(context.Background(), id).Result()
-	if err == redis.Nil {
-		preset := &model.Preset{BaseModel: model.BaseModel{ID: id}}
-		if err := pr.Conn.First(&preset).Related(&preset.TimerUnits).Error; err != nil {
-			return nil, err
-		}
+	// p, err := pr.Cache.Get(context.Background(), id).Result()
+	// if err == redis.Nil {
+	// 	preset := &model.Preset{BaseModel: model.BaseModel{ID: id}}
+	// 	if err := pr.Conn.First(&preset).Related(&preset.TimerUnits).Error; err != nil {
+	// 		return nil, err
+	// 	}
+	// 	p, err := json.Marshal(&preset)
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+	// 	err = pr.Cache.Set(context.Background(), preset.ID, p, time.Hour*24).Err()
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
 	
-		return preset, nil
-	} else if err != nil {
-		return nil, err
-	} else {
-		preset := &model.Preset{}
-		err = json.Unmarshal([]byte(p), preset)
-		if err != nil {
+	// 	return preset, nil
+	// } else if err != nil {
+	// 	return nil, err
+	// } else {
+	// 	preset := &model.Preset{}
+	// 	err = json.Unmarshal([]byte(p), preset)
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+
+	// 	return preset, nil
+	// }
+	preset, err := pr.GetCacheById(id)
+	if err != nil && err != redis.Nil {
+		return nil , err
+	}
+	if err == redis.Nil {
+		preset = &model.Preset{BaseModel: model.BaseModel{ID: id}}
+		if err = pr.Conn.First(&preset).Related(&preset.TimerUnits).Error; err != nil {
 			return nil, err
 		}
-
-		return preset, nil
+		go pr.SetCache(preset)
 	}
+	return preset, nil
 }
 
 func (pr *PresetRepository) Update(preset *model.Preset) (*model.Preset, error) {

@@ -12,19 +12,19 @@ services:
             POSTGRES_DB: postgres
             TZ: "Asia/Tokyo"
         volumes:
-            # - ./postgresql/data:/var/lib/postgresql/data/
             - timer_preset_volume:/var/lib/postgresql/data/
             - ./postgres/create_tables1.sql:/docker-entrypoint-initdb.d/create_tables1.sql
         restart: always
 
     redis:
-        image: redis:6-alpine3.15
+        image: redis:6.2.6-alpine
         hostname: redis_timer_presets
         ports:
             - "6379:6379"
-        volumes:
-            - timer_preset_volume:/data
-            - ./redis:/usr/local/etc/
+        # volumes:
+        #     - ./redis/redis.conf:/data/redis-server/usr/local/etc/redis/redis.conf
+        # command:
+        #     - "redis-server /data/redis-server/usr/local/etc/redis/redis.conf"
 
     # mongo:
     #     image: mongo

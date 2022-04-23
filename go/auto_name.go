@@ -3,7 +3,7 @@ package services
 import (
 	"fmt"
 	"strings"
-	"ultimate_timer/domain/model"
+	// "ultimate_timer/domain/model"
 )
 
 func AutoName(presets []model.Preset) (presetName string) {
