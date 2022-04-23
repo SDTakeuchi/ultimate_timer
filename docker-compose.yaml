@@ -46,7 +46,8 @@ services:
         ports:
             - "8080:8080"
         volumes:
-            - ./go/app:/go/app/
+            - ./go/app/:/go/ultimate_timer/
+        command: ["./start.sh"]
         depends_on:
             - db
 

@@ -9,12 +9,6 @@ import (
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-
-	// "errors"
-
-	// "encoding/json"
-	// "ultimate_timer/services"
-
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 

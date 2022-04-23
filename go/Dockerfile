@@ -1,18 +1,17 @@
-FROM golang:1.18.0-stretch
+FROM golang:1.18.1-stretch
 
-WORKDIR /go/ultimate_timer
+WORKDIR /go/ultimate_timer/
 
-RUN export GO111MODULE=auto \
-&& apt-get update
+RUN apt-get update \
+&& export GO111MODULE=auto
 
-COPY ./app .
+COPY ./app/ .
 
-RUN go mod init ultimate_timer \
-&& go get . \
-&& go build
-# && go install github.com/cosmtrek/air@v1.27.3
+# TODO: separate stg env and prd env
+RUN go mod tidy
+# && go build
 
 EXPOSE 8080
 
 CMD ["go", "run", "main.go", "0.0.0.0:8080"]
-# CMD ["air"]
+# CMD ["gin", "--immediate", "run", "main.go", "0.0.0.0:8080"]

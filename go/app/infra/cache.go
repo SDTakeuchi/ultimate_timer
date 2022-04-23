@@ -8,6 +8,7 @@ import (
 	"ultimate_timer/domain/model"
 )
 
+
 func (pr *PresetRepository) GetCacheById (id string) (*model.Preset, error) {
 	p, err := pr.Cache.Get(context.Background(), id).Result()
 	if err == redis.Nil {
@@ -20,7 +21,6 @@ func (pr *PresetRepository) GetCacheById (id string) (*model.Preset, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return preset, nil
 }
 
