@@ -4,6 +4,7 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
+// TODO: move to env file
 const RedisAddr = "redis_timer_presets:6379"
 
 func NewRedis() *redis.Client {

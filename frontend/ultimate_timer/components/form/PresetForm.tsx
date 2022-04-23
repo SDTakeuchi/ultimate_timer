@@ -47,14 +47,12 @@ export const NameForm: React.FC<Props> = ({ onSubmit }) => {
         axios
           .post(presetURL, values)
           .then((response) => {
-            console.log(response);
-            console.log(response.data);
-            return <Navigate replace to="/timer" />;
-            alert('preset created!');
+            window.location.href = "/timer";
           })
           .catch((response) => {
             console.log(response);
             console.log(response.data);
+            alert("ERROR!");
           });
       }}
     >

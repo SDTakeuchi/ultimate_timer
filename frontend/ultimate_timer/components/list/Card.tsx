@@ -97,13 +97,13 @@ export const TimerCard: React.FC<Props> = ({ name, display_order, id }) => {
         <CardActions>
           <div className={classes.alignRight}>
 
-            <Link href={`/timer/${encodeURIComponent(id)}/play`} passHref>
+            <Link href={`/timer/play/${encodeURIComponent(id)}`} passHref>
               <IconButton size="medium">
                 <PlayCircleFilledWhiteIcon />
               </IconButton>
             </Link>
 
-            <Link href={`/timer/${encodeURIComponent(id)}/edit`} passHref>
+            <Link href={`/timer/edit/${encodeURIComponent(id)}`} passHref>
               <IconButton size="medium">
                 <EditIcon />
               </IconButton>

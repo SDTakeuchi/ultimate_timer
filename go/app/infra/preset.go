@@ -23,10 +23,10 @@ func NewPresetRepository(conn *gorm.DB, cache *redis.Client) repository.PresetRe
 }
 
 func (pr *PresetRepository) Create(preset *model.Preset) (*model.Preset, error) {
-	go pr.SetCache(preset)
 	if err := pr.Conn.Create(&preset).Error; err != nil {
 		return nil, err
 	}
+	go pr.SetCache(preset)
 
 	return preset, nil
 }
@@ -52,6 +52,7 @@ func (pr *PresetRepository) FindByID(id string) (*model.Preset, error) {
 		}
 		go pr.SetCache(preset)
 	}
+
 	return preset, nil
 }
 
@@ -60,6 +61,7 @@ func (pr *PresetRepository) Update(preset *model.Preset) (*model.Preset, error) 
 		return nil, err
 	}
 	go pr.SetCache(preset)
+
 	return preset, nil
 }
 
@@ -71,5 +73,6 @@ func (pr *PresetRepository) Delete(preset *model.Preset) error {
 	if err := pr.Conn.Delete(&preset).Error; err != nil {
 		return err
 	}
+
 	return nil
 }

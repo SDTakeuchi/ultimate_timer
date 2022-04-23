@@ -1,14 +1,14 @@
-import type { NextPage } from 'next'
+import type { NextPage } from 'next';
 import { useRouter } from "next/router";
+import {Play} from "../../../components/play/Play"
 
 const TimerDetail: NextPage = () => {
   const router = useRouter();
-  const {presetId} = router.query;
-  console.log(presetId);
+  const presetId: string = String(router.query);
+
   return (
     <div>
-      <h4>Edit page</h4>
-      <h1>{presetId}</h1>
+      <Play id={presetId}/>
     </div>
   );
 };

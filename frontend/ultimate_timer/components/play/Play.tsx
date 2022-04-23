@@ -1,7 +1,11 @@
 import React from 'react';
 import axios from 'axios';
-import presetURL from "../../config/settings";
 import Box from '@material-ui/core/Box';
+import presetURL from "../../config/settings";
+
+interface Props {
+  id: string;
+}
 
 interface iPreset {
   id: string;
@@ -16,21 +20,21 @@ interface iPreset {
   },
 }
 
-export const Play: React.FC = () => {
-  const defaultProps: iPresets[] = [];
-  const [presets, setPresets] = React.useState<iPresets[]>(defaultProps);
+export const Play: React.FC<Props> = ({ id }) => {
+  const [preset, setPreset] = React.useState<iPreset>();
   const url: string = presetURL;
 
   React.useEffect(() => {
     axios
-      .get<iPresets[]>(url)
+      .get<iPreset>(url)
       .then((response) => {
-        setPresets(response.data);
+        setPreset(response.data);
       });
   }, []);
 
   return (
     <Box>
+      
     </Box>
   )
 }
