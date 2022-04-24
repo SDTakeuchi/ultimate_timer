@@ -1,7 +1,7 @@
 package model
 
 import (
-	"errors"
+	// "errors"
 	"time"
 	"ultimate_timer/services"
 )
@@ -22,9 +22,10 @@ func NewPreset(
 	waitsConfirmEach, waitsConfirmLast bool,
 	timerUnits []TimerUnit) (*Preset, error) {
 
-	if name == "" {
-		return nil, errors.New("項目名を入力してください")
-	}
+	// allows blank
+	// if name == "" {
+	// 	return nil, errors.New("項目名を入力してください")
+	// }
 
 	now := time.Now()
 	id := services.GenUuid()
@@ -52,9 +53,7 @@ func (p *Preset) Set(
 	waitsConfirmEach, waitsConfirmLast bool,
 	timerUnits []TimerUnit) error {
 
-	now := time.Now()
-
-	p.UpdatedAt = now
+	p.UpdatedAt = time.Now()
 	p.DisplayOrder = displayOrder
 	p.LoopCount = loopCount
 	p.WaitsConfirmEach = waitsConfirmEach

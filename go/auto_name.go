@@ -6,7 +6,7 @@ import (
 	// "ultimate_timer/domain/model"
 )
 
-func AutoName(presets []model.Preset) (presetName string) {
+func AutoName(presets []model.Preset) (presetName string, err) {
 	maxTimerCount := 999
 	var names []string
 	for _, preset := range presets {
@@ -22,7 +22,7 @@ func AutoName(presets []model.Preset) (presetName string) {
 		// TODO no such function as GetByName
 		// timer = usecase.GetByName(n)
 		if timer == nil {
-			return n
+			return n, nil
 		}
 	}
 }

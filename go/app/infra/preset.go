@@ -4,25 +4,35 @@ import (
 	// "context"
 	// "encoding/json"
 	// "time"
-	"github.com/jinzhu/gorm"
 	"github.com/go-redis/redis/v8"
+	"github.com/jinzhu/gorm"
 	"ultimate_timer/domain/model"
 	"ultimate_timer/domain/repository"
 )
 
 type PresetRepository struct {
-	Conn *gorm.DB
+	Conn  *gorm.DB
 	Cache *redis.Client
 }
 
 func NewPresetRepository(conn *gorm.DB, cache *redis.Client) repository.PresetRepository {
 	return &PresetRepository{
-		Conn: conn,
+		Conn:  conn,
 		Cache: cache,
 	}
 }
 
 func (pr *PresetRepository) Create(preset *model.Preset) (*model.Preset, error) {
+	presets, err := pr.Get()
+	if err != nil {
+		return nil, err
+	}
+	var savedNames []string
+	for _, p := range presets {
+		savedNames = append(savedNames, p.Name)
+	}
+	CleanName(savedNames, preset)
+
 	if err := pr.Conn.Create(&preset).Error; err != nil {
 		return nil, err
 	}
@@ -42,7 +52,7 @@ func (pr *PresetRepository) Get() (presets []*model.Preset, err error) {
 func (pr *PresetRepository) FindByID(id string) (*model.Preset, error) {
 	preset, err := pr.GetCacheById(id)
 	if err != nil && err != redis.Nil {
-		return nil , err
+		return nil, err
 	}
 	if err == redis.Nil {
 		// query to Postgres
