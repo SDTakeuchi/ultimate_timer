@@ -14,13 +14,13 @@ import (
 
 
 func main() {
-    taskRepository := infra.NewPresetRepository(config.NewDB(), config.NewRedis())
-    taskUsecase := usecase.NewPresetUsecase(taskRepository)
-    taskHandler := handler.NewPresetHandler(taskUsecase)
+    presetRepository := infra.NewPresetRepository(config.NewDB(), config.NewRedis())
+    presetUsecase := usecase.NewPresetUsecase(presetRepository)
+    presetHandler := handler.NewPresetHandler(presetUsecase)
 
     e := echo.New()
 	e.Use(services.Logger)
 	e.Use(middleware.Recover())
-    handler.InitRouting(e, taskHandler)
+    handler.InitRouting(e, presetHandler)
     e.Logger.Fatal(e.Start(":8080"))
 }
