@@ -1,9 +1,6 @@
 package infra
 
 import (
-	// "context"
-	// "encoding/json"
-	// "time"
 	"github.com/go-redis/redis/v8"
 	"github.com/jinzhu/gorm"
 	"ultimate_timer/domain/model"

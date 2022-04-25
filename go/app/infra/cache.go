@@ -3,13 +3,12 @@ package infra
 import (
 	"context"
 	"encoding/json"
-	"time"
 	"github.com/go-redis/redis/v8"
+	"time"
 	"ultimate_timer/domain/model"
 )
 
-
-func (pr *PresetRepository) GetCacheById (id string) (*model.Preset, error) {
+func (pr *PresetRepository) GetCacheById(id string) (*model.Preset, error) {
 	p, err := pr.Cache.Get(context.Background(), id).Result()
 	if err == redis.Nil {
 		return nil, redis.Nil
@@ -24,7 +23,7 @@ func (pr *PresetRepository) GetCacheById (id string) (*model.Preset, error) {
 	return preset, nil
 }
 
-func (pr *PresetRepository) SetCache (preset *model.Preset) error {
+func (pr *PresetRepository) SetCache(preset *model.Preset) error {
 	p, err := json.Marshal(preset)
 	if err != nil {
 		return err
