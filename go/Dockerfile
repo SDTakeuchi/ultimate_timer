@@ -8,7 +8,8 @@ RUN apt-get update \
 COPY ./app/ .
 
 # TODO: separate stg env and prd env
-RUN go mod tidy
+RUN go install github.com/codegangsta/gin \
+&&  go mod tidy
 # && go build
 
 EXPOSE 8080
