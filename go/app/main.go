@@ -20,6 +20,8 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
+	port := fmt.Sprintf(":%s", os.Getenv("GO_PORT"))
+
 	presetRepository := infra.NewPresetRepository(config.NewDB(), config.NewRedis())
 	presetUsecase := usecase.NewPresetUsecase(presetRepository)
 	presetHandler := handler.NewPresetHandler(presetUsecase)
@@ -28,7 +30,5 @@ func main() {
 	e.Use(services.Logger)
 	e.Use(middleware.Recover())
 	handler.InitRouting(e, presetHandler)
-
-	port := fmt.Sprintf(":%s", os.Getenv("GO_PORT"))
 	e.Logger.Fatal(e.Start(port))
 }
