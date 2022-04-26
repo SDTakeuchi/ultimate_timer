@@ -1,15 +1,24 @@
 package config
 
 import (
+	"fmt"
+	"os"
 	"github.com/go-redis/redis/v8"
+	"github.com/joho/godotenv"
 )
 
-// TODO: move to env file
-const RedisAddr = "redis_timer_presets:6379"
-
 func NewRedis() *redis.Client {
+	err := godotenv.Load("local.env")
+	if err != nil {
+		panic(err.Error())
+	}
+	reddisAddr := fmt.Sprintf(
+		"%s:%s",
+		os.Getenv("REDIS_ADDRESS"),
+		os.Getenv("REDIS_PORT"),
+	)
 	return redis.NewClient(&redis.Options{
-		Addr: RedisAddr,
+		Addr: reddisAddr,
 		DB:   0,
 	})
 }
