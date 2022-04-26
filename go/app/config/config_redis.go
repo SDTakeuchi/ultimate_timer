@@ -8,7 +8,7 @@ import (
 )
 
 func NewRedis() *redis.Client {
-	err := godotenv.Load("local.env")
+	err := godotenv.Load()
 	if err != nil {
 		panic(err.Error())
 	}

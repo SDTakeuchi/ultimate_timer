@@ -6,7 +6,6 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/joho/godotenv"
-
 	"ultimate_timer/config"
 	"ultimate_timer/handler"
 	"ultimate_timer/infra"
@@ -16,7 +15,7 @@ import (
 )
 
 func main() {
-	err := godotenv.Load("local.env")
+	err := godotenv.Load()
 	if err != nil {
 		panic(err.Error())
 	}
