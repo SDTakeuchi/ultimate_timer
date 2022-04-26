@@ -10,8 +10,7 @@ import (
 
 // NewDB DBと接続する
 func NewDB() *gorm.DB {
-	err := godotenv.Load()
-	if err != nil {
+	if err := godotenv.Load(); err != nil {
 		panic(err.Error())
 	}
 	dbConfig := fmt.Sprintf(

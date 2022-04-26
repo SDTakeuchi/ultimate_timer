@@ -3,7 +3,6 @@ package usecase_test
 import (
 	"ultimate_timer/domain/repository"
 	"ultimate_timer/domain/model"
-	"ultimate_timer/database"
 	"ultimate_timer/usecase"
 	"testing"
 
@@ -32,7 +31,7 @@ var (
 			2,
 			false,
 			true,
-			[1]model.TimerUnit{}{
+			[]model.TimerUnit{} {
 				Order: 4,
 				Duration: 123,
 			},

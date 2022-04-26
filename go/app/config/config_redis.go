@@ -8,8 +8,7 @@ import (
 )
 
 func NewRedis() *redis.Client {
-	err := godotenv.Load()
-	if err != nil {
+	if err := godotenv.Load(); err != nil {
 		panic(err.Error())
 	}
 	reddisAddr := fmt.Sprintf(

@@ -16,8 +16,7 @@ import (
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
+	if err := godotenv.Load(); err != nil {
 		panic(err.Error())
 	}
 	port := fmt.Sprintf(":%s", os.Getenv("GO_PORT"))
