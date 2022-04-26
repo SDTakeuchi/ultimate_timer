@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/labstack/echo"
@@ -27,5 +28,7 @@ func main() {
 	e.Use(services.Logger)
 	e.Use(middleware.Recover())
 	handler.InitRouting(e, presetHandler)
-	e.Logger.Fatal(e.Start(os.Getenv("GO_PORT")))
+
+	port := fmt.Sprintf(":%s", os.Getenv("GO_PORT"))
+	e.Logger.Fatal(e.Start(port))
 }
