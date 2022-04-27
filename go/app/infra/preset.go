@@ -64,6 +64,16 @@ func (pr *PresetRepository) FindByID(id string) (*model.Preset, error) {
 }
 
 func (pr *PresetRepository) Update(preset *model.Preset) (*model.Preset, error) {
+	presets, err := pr.Get()
+	if err != nil {
+		return nil, err
+	}
+	var savedNames []string
+	for _, p := range presets {
+		savedNames = append(savedNames, p.Name)
+	}
+	CleanName(savedNames, preset)
+
 	if err := pr.Conn.Model(&preset).Update(&preset).Error; err != nil {
 		return nil, err
 	}

@@ -8,7 +8,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// NewDB DBと接続する
 func NewDB() *gorm.DB {
 	if err := godotenv.Load(); err != nil {
 		panic(err.Error())

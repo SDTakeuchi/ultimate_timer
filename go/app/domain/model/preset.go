@@ -54,6 +54,7 @@ func (p *Preset) Set(
 	timerUnits []TimerUnit) error {
 
 	p.UpdatedAt = time.Now()
+	p.Name = name
 	p.DisplayOrder = displayOrder
 	p.LoopCount = loopCount
 	p.WaitsConfirmEach = waitsConfirmEach

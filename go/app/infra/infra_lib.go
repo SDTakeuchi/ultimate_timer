@@ -14,7 +14,6 @@ func CleanName(savedNames []string, p *model.Preset) {
 		timeNow := time.Now().Format("_20060102_150405")
 		p.Name += timeNow
 	}
-	return
 }
 
 func contains[T comparable] (elems []T, v T) bool {
