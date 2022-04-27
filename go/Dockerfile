@@ -7,8 +7,8 @@ RUN apt-get update \
 
 COPY ./app/ .
 
-RUN go install github.com/codegangsta/gin \
-&&  go mod tidy
+RUN go mod tidy \
+&&  go install github.com/codegangsta/gin
 # && go build
 
 EXPOSE 8080
