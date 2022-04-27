@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS presets (
-    id varchar(32) not null,
+    id varchar(36) not null,
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     name varchar(128) not null,
