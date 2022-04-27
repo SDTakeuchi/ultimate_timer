@@ -68,7 +68,7 @@ services:
         container_name: frontend_ultimate_timer
         hostname: frontend
         volumes:
-            - ./frontend/ultimate_timer:/app
+            - ./frontend/ultimate_timer/:/app/
         tty: true
         environment:
             # enables hot reload
