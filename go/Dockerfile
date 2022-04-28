@@ -13,4 +13,3 @@ RUN go mod tidy
 EXPOSE 8080
 
 CMD ["go", "run", "main.go", "0.0.0.0:8080"]
-# CMD ["gin", "--immediate", "run", "main.go", "0.0.0.0:8080"]
