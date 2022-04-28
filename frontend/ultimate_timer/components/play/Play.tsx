@@ -50,8 +50,14 @@ export const Play: React.FC<Props> = ({ id }) => {
       });
   }, []);
 
+  if (preset === null || preset === undefined) {
+    window.location.href = "/";
+  }
   return (
     <Box className="timer-container">
+      <h1>
+        {preset.name}
+      </h1>
       <div>
         {/* TODO want to show remaning sets instead */}
         Loop: {preset?.loop_count} times
