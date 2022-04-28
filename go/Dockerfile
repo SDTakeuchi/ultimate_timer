@@ -3,12 +3,11 @@ FROM golang:1.18.1-stretch
 WORKDIR /go/ultimate_timer/
 
 RUN apt-get update \
-&& export GO111MODULE=auto
+&& export GO111MODULE=on
 
 COPY ./app/ .
 
-RUN go mod tidy \
-&&  go install github.com/codegangsta/gin
+RUN go mod tidy
 # && go build
 
 EXPOSE 8080
