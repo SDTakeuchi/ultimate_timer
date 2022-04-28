@@ -14,3 +14,4 @@ CREATE TABLE IF NOT EXISTS timer_units (
     duration integer not null,
     preset_id varchar(36) not null
 );
+

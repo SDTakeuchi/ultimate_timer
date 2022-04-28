@@ -13,7 +13,7 @@ services:
             TZ: "Asia/Tokyo"
         volumes:
             - timer_preset_volume:/var/lib/postgresql/data/
-            - ./postgres/create_tables1.sql:/docker-entrypoint-initdb.d/create_tables1.sql
+            - ./postgres/docker-entrypoint-initdb.d/create_tables1.sql:/docker-entrypoint-initdb.d/create_tables1.sql
         restart: always
 
     redis:
@@ -79,3 +79,4 @@ services:
 
 volumes:
     timer_preset_volume:
+
