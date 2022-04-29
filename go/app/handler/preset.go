@@ -2,15 +2,11 @@ package handler
 
 import (
 	"net/http"
-	// "strconv"
 
-	"ultimate_timer/domain/model"
 	"ultimate_timer/services"
 	"ultimate_timer/usecase"
 
-	// "github.com/fatih/structs"
 	"github.com/labstack/echo"
-	// null "gopkg.in/guregu/null.v4"
 )
 
 type PresetHandler interface {
@@ -35,10 +31,7 @@ type requestPreset struct {
 	LoopCount        int    `json:"loop_count"`
 	WaitsConfirmEach bool   `json:"waits_confirm_each"`
 	WaitsConfirmLast bool   `json:"waits_confirm_last"`
-	TimerUnits       []struct {
-		Order    int `json:"order"`
-		Duration int `json:"duration"`
-	} `json:"timer_unit"`
+	TimerUnits       []structTimerUnit `json:"timer_unit"`
 }
 
 type responsePreset struct {
@@ -48,7 +41,12 @@ type responsePreset struct {
 	LoopCount        int               `json:"loop_count"`
 	WaitsConfirmEach bool              `json:"waits_confirm_each"`
 	WaitsConfirmLast bool              `json:"waits_confirm_last"`
-	TimerUnits       []model.TimerUnit `json:"timer_unit"`
+	TimerUnits       []structTimerUnit `json:"timer_unit"`
+}
+
+type structTimerUnit struct {
+	Order    int `json:"order"`
+	Duration int `json:"duration"`
 }
 
 func (ph *presetHandler) Post() echo.HandlerFunc {
@@ -80,7 +78,12 @@ func (ph *presetHandler) Post() echo.HandlerFunc {
 			LoopCount:        createdPreset.LoopCount,
 			WaitsConfirmEach: createdPreset.WaitsConfirmEach,
 			WaitsConfirmLast: createdPreset.WaitsConfirmLast,
-			TimerUnits:       createdPreset.TimerUnits,
+		}
+		for _, t := range createdPreset.TimerUnits {
+			res.TimerUnits = append(res.TimerUnits, structTimerUnit{
+				Order: t.Order,
+				Duration: t.Duration,
+			})
 		}
 
 		return c.JSON(http.StatusCreated, res)
@@ -101,7 +104,12 @@ func (ph *presetHandler) Get() echo.HandlerFunc {
 				LoopCount:        fp.LoopCount,
 				WaitsConfirmEach: fp.WaitsConfirmEach,
 				WaitsConfirmLast: fp.WaitsConfirmLast,
-				TimerUnits:       fp.TimerUnits,
+			}
+			for _, t := range fp.TimerUnits {
+				p.TimerUnits = append(p.TimerUnits, structTimerUnit{
+					Order: t.Order,
+					Duration: t.Duration,
+				})
 			}
 			res = append(res, p)
 		}
@@ -122,7 +130,12 @@ func (ph *presetHandler) FindByID() echo.HandlerFunc {
 			LoopCount:        foundPreset.LoopCount,
 			WaitsConfirmEach: foundPreset.WaitsConfirmEach,
 			WaitsConfirmLast: foundPreset.WaitsConfirmLast,
-			TimerUnits:       foundPreset.TimerUnits,
+		}
+		for _, t := range foundPreset.TimerUnits {
+			res.TimerUnits = append(res.TimerUnits, structTimerUnit{
+				Order: t.Order,
+				Duration: t.Duration,
+			})
 		}
 		return c.JSON(http.StatusOK, res)
 	}
@@ -161,7 +174,12 @@ func (ph *presetHandler) Put() echo.HandlerFunc {
 			LoopCount:        updatedPreset.LoopCount,
 			WaitsConfirmEach: updatedPreset.WaitsConfirmEach,
 			WaitsConfirmLast: updatedPreset.WaitsConfirmLast,
-			TimerUnits:       updatedPreset.TimerUnits,
+		}
+		for _, t := range updatedPreset.TimerUnits {
+			res.TimerUnits = append(res.TimerUnits, structTimerUnit{
+				Order: t.Order,
+				Duration: t.Duration,
+			})
 		}
 
 		return c.JSON(http.StatusOK, res)

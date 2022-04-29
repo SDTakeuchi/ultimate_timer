@@ -37,23 +37,32 @@ func (pr *presetUsecase) Create(
 	displayOrder, loopCount int,
 	waitsConfirmEach, waitsConfirmLast bool,
 	timerUnits []map[string]int) (*model.Preset, error) {
-
-	tuMap := []model.TimerUnit{}
-	for _, tu := range timerUnits {
-		tuMap = append(tuMap, model.TimerUnit{Duration: tu["Duration"], Order: tu["Order"]})
-	}
-
 	preset, err := model.NewPreset(
 		name,
 		displayOrder,
 		loopCount,
 		waitsConfirmEach,
 		waitsConfirmLast,
-		tuMap,
+		[]model.TimerUnit{},
 	)
 	if err != nil {
 		return nil, err
 	}
+
+	tuMap := []model.TimerUnit{}
+	for _, tu := range timerUnits {
+		tu, err := model.NewTimerUnit(
+			preset.ID,
+			tu["Duration"],
+			tu["Order"],
+		)
+		if err != nil {
+			return nil, err
+		}
+		tuMap = append(tuMap, *tu)
+	}
+
+	preset.TimerUnits = tuMap
 
 	createdPreset, err := pr.presetRepo.Create(preset)
 	if err != nil {
@@ -93,7 +102,11 @@ func (pr *presetUsecase) Update(
 
 	tuMap := []model.TimerUnit{}
 	for _, tu := range timerUnits {
-		tuMap = append(tuMap, model.TimerUnit{Duration: tu["Duration"], Order: tu["Order"]})
+		tempTu, err := model.NewTimerUnit(preset.ID, tu["Duration"], tu["Order"])
+		if err != nil {
+			return nil, err
+		}
+		tuMap = append(tuMap, *tempTu)
 	}
 
 	err = preset.Set(name, displayOrder, loopCount, waitsConfirmEach, waitsConfirmLast, tuMap)

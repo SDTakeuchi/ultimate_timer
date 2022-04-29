@@ -13,7 +13,7 @@ services:
             TZ: "Asia/Tokyo"
         volumes:
             - timer_preset_volume:/var/lib/postgresql/data/
-            - ./postgres/docker-entrypoint-initdb.d/create_tables1.sql:/docker-entrypoint-initdb.d/create_tables1.sql
+            - ./postgres/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
         restart: always
 
     redis:
@@ -71,7 +71,7 @@ services:
             - ./frontend/ultimate_timer/:/usr/app/
         tty: true
         environment:
-            # enables hot reload
+            # enables live reload
             - CHOKIDAR_USEPOLLING=true
             - WATCHPACK_POLLING=true
         ports:

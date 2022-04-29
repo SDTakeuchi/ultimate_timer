@@ -6,7 +6,7 @@ import (
 	"ultimate_timer/domain/model"
 
 	sqlmock "github.com/DATA-DOG/go-sqlmock"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 func getDBMock() (*gorm.DB, sqlmock.Sqlmock, error) {

@@ -2,7 +2,7 @@ package infra
 
 import (
 	"github.com/go-redis/redis/v8"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 	"ultimate_timer/domain/model"
 	"ultimate_timer/domain/repository"
 )
@@ -54,7 +54,7 @@ func (pr *PresetRepository) FindByID(id string) (*model.Preset, error) {
 	if err == redis.Nil {
 		// query to Postgres
 		preset = &model.Preset{BaseModel: model.BaseModel{ID: id}}
-		if err = pr.Conn.First(&preset).Related(&preset.TimerUnits).Error; err != nil {
+		if err = pr.Conn.Take(&preset).Error; err != nil {
 			return nil, err
 		}
 		go pr.SetCache(preset)
@@ -70,11 +70,17 @@ func (pr *PresetRepository) Update(preset *model.Preset) (*model.Preset, error) 
 	}
 	var savedNames []string
 	for _, p := range presets {
-		savedNames = append(savedNames, p.Name)
+		if preset.ID != p.ID {
+			savedNames = append(savedNames, p.Name)
+		}
 	}
 	CleanName(savedNames, preset)
 
-	if err := pr.Conn.Model(&preset).Update(&preset).Error; err != nil {
+	// TODO: needs to literaly UPDATE instead of DELETE and CREATE
+	if err := pr.Conn.Delete(&model.TimerUnit{}, "preset_id = ?", preset.ID).Error; err != nil {
+		return nil, err
+	}
+	if err := pr.Conn.Model(&preset).Updates(preset).Error; err != nil {
 		return nil, err
 	}
 	go pr.SetCache(preset)
@@ -83,10 +89,7 @@ func (pr *PresetRepository) Update(preset *model.Preset) (*model.Preset, error) 
 }
 
 func (pr *PresetRepository) Delete(preset *model.Preset) error {
-	id := preset.ID
-	if err := pr.Conn.Where("preset_id = ?", id).Delete(preset.TimerUnits).Error; err != nil {
-		return err
-	}
+	// TODO: are related TimerUnits deleted too??
 	if err := pr.Conn.Delete(&preset).Error; err != nil {
 		return err
 	}
