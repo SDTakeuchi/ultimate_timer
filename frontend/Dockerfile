@@ -1,8 +1,8 @@
-FROM node:16.14-slim
+FROM node:18-alpine3.15
 
-WORKDIR /app
+WORKDIR /usr/app/
 
-RUN apt-get update \
+RUN apk update \
 &&  rm -rf node_modules/ 
 
 COPY ./ultimate_timer/ .

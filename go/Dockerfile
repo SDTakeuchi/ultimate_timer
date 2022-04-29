@@ -1,9 +1,10 @@
-FROM golang:1.18.1-stretch
+FROM golang:1.18.1-alpine3.15
 
 WORKDIR /go/ultimate_timer/
 
-RUN apt-get update \
-&& export GO111MODULE=on
+RUN apk update \
+&&  apk add --no-cache bash \
+&&  export GO111MODULE=on
 
 COPY ./app/ .
 

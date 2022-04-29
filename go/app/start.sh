@@ -1,4 +1,7 @@
-#!/bin/bash -eu
+#!/bin/bash
+
+# change line setting from CRLF to LF if neccessary 
+
 go env
 go mod tidy
 go install github.com/codegangsta/gin@latest
