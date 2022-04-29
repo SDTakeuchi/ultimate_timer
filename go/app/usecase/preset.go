@@ -1,7 +1,8 @@
 package usecase
 
 import (
-    // "time"
+	// "time"
+	"encoding/json"
 	"ultimate_timer/domain/model"
 	"ultimate_timer/domain/repository"
 	// "ultimate_timer/services"
@@ -12,15 +13,15 @@ type PresetUsecase interface {
 		name string,
 		displayOrder, loopCount int,
 		waitsConfirmEach, waitsConfirmLast bool,
-		timerUnits []map[string]int) (*model.Preset, error)
-    Get() ([]*model.Preset, error)
+		timerUnits json.RawMessage) (*model.Preset, error)
+	Get() ([]*model.Preset, error)
 	FindByID(id string) (*model.Preset, error)
 	Update(
-        id string,
+		id string,
 		name string,
 		displayOrder, loopCount int,
 		waitsConfirmEach, waitsConfirmLast bool,
-		timerUnits []map[string]int) (*model.Preset, error)
+		timerUnits json.RawMessage) (*model.Preset, error)
 	Delete(id string) error
 }
 
@@ -36,34 +37,19 @@ func (pr *presetUsecase) Create(
 	name string,
 	displayOrder, loopCount int,
 	waitsConfirmEach, waitsConfirmLast bool,
-	timerUnits []map[string]int) (*model.Preset, error) {
+	timerUnits json.RawMessage) (*model.Preset, error) {
+
 	preset, err := model.NewPreset(
 		name,
 		displayOrder,
 		loopCount,
 		waitsConfirmEach,
 		waitsConfirmLast,
-		[]model.TimerUnit{},
+		timerUnits,
 	)
 	if err != nil {
 		return nil, err
 	}
-
-	tuMap := []model.TimerUnit{}
-	for _, tu := range timerUnits {
-		tu, err := model.NewTimerUnit(
-			preset.ID,
-			tu["Duration"],
-			tu["Order"],
-		)
-		if err != nil {
-			return nil, err
-		}
-		tuMap = append(tuMap, *tu)
-	}
-
-	preset.TimerUnits = tuMap
-
 	createdPreset, err := pr.presetRepo.Create(preset)
 	if err != nil {
 		return nil, err
@@ -91,25 +77,17 @@ func (pr *presetUsecase) Get() ([]*model.Preset, error) {
 }
 
 func (pr *presetUsecase) Update(
-		id,	name string,
-		displayOrder, loopCount int,
-		waitsConfirmEach, waitsConfirmLast bool,
-		timerUnits []map[string]int) (*model.Preset, error) {
+	id, name string,
+	displayOrder, loopCount int,
+	waitsConfirmEach, waitsConfirmLast bool,
+	timerUnits json.RawMessage) (*model.Preset, error) {
+
 	preset, err := pr.presetRepo.FindByID(id)
 	if err != nil {
 		return nil, err
 	}
 
-	tuMap := []model.TimerUnit{}
-	for _, tu := range timerUnits {
-		tempTu, err := model.NewTimerUnit(preset.ID, tu["Duration"], tu["Order"])
-		if err != nil {
-			return nil, err
-		}
-		tuMap = append(tuMap, *tempTu)
-	}
-
-	err = preset.Set(name, displayOrder, loopCount, waitsConfirmEach, waitsConfirmLast, tuMap)
+	err = preset.Set(name, displayOrder, loopCount, waitsConfirmEach, waitsConfirmLast, timerUnits)
 	if err != nil {
 		return nil, err
 	}

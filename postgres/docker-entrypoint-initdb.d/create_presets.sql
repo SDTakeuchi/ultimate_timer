@@ -6,5 +6,6 @@ CREATE TABLE IF NOT EXISTS presets (
     display_order integer NOT NULL,
     loop_count integer NOT NULL,
     waits_confirm_each boolean NOT NULL,
-    waits_confirm_last boolean NOT NULL
+    waits_confirm_last boolean NOT NULL,
+    timer_units jsonb
 );

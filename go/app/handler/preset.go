@@ -1,9 +1,9 @@
 package handler
 
 import (
+	"encoding/json"
 	"net/http"
 
-	"ultimate_timer/services"
 	"ultimate_timer/usecase"
 
 	"github.com/labstack/echo"
@@ -55,10 +55,14 @@ func (ph *presetHandler) Post() echo.HandlerFunc {
 		if err := c.Bind(&req); err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
 		}
-		var tuMap []map[string]int
-		for _, tu := range req.TimerUnits {
-			m := services.StructToMapInt(tu)
-			tuMap = append(tuMap, m)
+		// var tuMap []map[string]int
+		// for _, tu := range req.TimerUnits {
+		// 	m := services.StructToMapInt(tu)
+		// 	tuMap = append(tuMap, m)
+		// }
+		tuJson, err := json.Marshal(req.TimerUnits)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, err.Error())
 		}
 
 		createdPreset, err := ph.presetUsecase.Create(
@@ -67,7 +71,7 @@ func (ph *presetHandler) Post() echo.HandlerFunc {
 			req.LoopCount,
 			req.WaitsConfirmEach,
 			req.WaitsConfirmLast,
-			tuMap,
+			tuJson,
 		)
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
@@ -79,12 +83,12 @@ func (ph *presetHandler) Post() echo.HandlerFunc {
 			WaitsConfirmEach: createdPreset.WaitsConfirmEach,
 			WaitsConfirmLast: createdPreset.WaitsConfirmLast,
 		}
-		for _, t := range createdPreset.TimerUnits {
-			res.TimerUnits = append(res.TimerUnits, structTimerUnit{
-				Order: t.Order,
-				Duration: t.Duration,
-			})
+		var stu []structTimerUnit
+		err = json.Unmarshal(createdPreset.TimerUnits, &stu)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, err.Error())
 		}
+		res.TimerUnits = stu
 
 		return c.JSON(http.StatusCreated, res)
 	}
@@ -105,12 +109,12 @@ func (ph *presetHandler) Get() echo.HandlerFunc {
 				WaitsConfirmEach: fp.WaitsConfirmEach,
 				WaitsConfirmLast: fp.WaitsConfirmLast,
 			}
-			for _, t := range fp.TimerUnits {
-				p.TimerUnits = append(p.TimerUnits, structTimerUnit{
-					Order: t.Order,
-					Duration: t.Duration,
-				})
+			var stu []structTimerUnit
+			err = json.Unmarshal(fp.TimerUnits, &stu)
+			if err != nil {
+				return c.JSON(http.StatusBadRequest, err.Error())
 			}
+			p.TimerUnits = stu
 			res = append(res, p)
 		}
 		return c.JSON(http.StatusOK, res)
@@ -131,12 +135,12 @@ func (ph *presetHandler) FindByID() echo.HandlerFunc {
 			WaitsConfirmEach: foundPreset.WaitsConfirmEach,
 			WaitsConfirmLast: foundPreset.WaitsConfirmLast,
 		}
-		for _, t := range foundPreset.TimerUnits {
-			res.TimerUnits = append(res.TimerUnits, structTimerUnit{
-				Order: t.Order,
-				Duration: t.Duration,
-			})
+		var stu []structTimerUnit
+		err = json.Unmarshal(foundPreset.TimerUnits, &stu)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, err.Error())
 		}
+		res.TimerUnits = stu
 		return c.JSON(http.StatusOK, res)
 	}
 }
@@ -149,10 +153,14 @@ func (ph *presetHandler) Put() echo.HandlerFunc {
 		if err := c.Bind(&req); err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
 		}
-		var tuMap []map[string]int
-		for _, tu := range req.TimerUnits {
-			m := services.StructToMapInt(tu)
-			tuMap = append(tuMap, m)
+		// var tuMap []map[string]int
+		// for _, tu := range req.TimerUnits {
+		// 	m := services.StructToMapInt(tu)
+		// 	tuMap = append(tuMap, m)
+		// }
+		tuJson, err := json.Marshal(req.TimerUnits)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, err.Error())
 		}
 
 		updatedPreset, err := ph.presetUsecase.Update(
@@ -162,7 +170,7 @@ func (ph *presetHandler) Put() echo.HandlerFunc {
 			req.LoopCount,
 			req.WaitsConfirmEach,
 			req.WaitsConfirmLast,
-			tuMap,
+			tuJson,
 		)
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
@@ -175,12 +183,12 @@ func (ph *presetHandler) Put() echo.HandlerFunc {
 			WaitsConfirmEach: updatedPreset.WaitsConfirmEach,
 			WaitsConfirmLast: updatedPreset.WaitsConfirmLast,
 		}
-		for _, t := range updatedPreset.TimerUnits {
-			res.TimerUnits = append(res.TimerUnits, structTimerUnit{
-				Order: t.Order,
-				Duration: t.Duration,
-			})
+		var stu []structTimerUnit
+		err = json.Unmarshal(updatedPreset.TimerUnits, &stu)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, err.Error())
 		}
+		res.TimerUnits = stu
 
 		return c.JSON(http.StatusOK, res)
 	}
@@ -190,8 +198,7 @@ func (th *presetHandler) Delete() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		id := c.Param("id")
 
-		err := th.presetUsecase.Delete(id)
-		if err != nil {
+		if err := th.presetUsecase.Delete(id); err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
 		}
 

@@ -39,7 +39,7 @@ func (pr *PresetRepository) Create(preset *model.Preset) (*model.Preset, error) 
 }
 
 func (pr *PresetRepository) Get() (presets []*model.Preset, err error) {
-	if err := pr.Conn.Preload("TimerUnits").Find(&presets).Error; err != nil {
+	if err := pr.Conn.Find(&presets).Error; err != nil {
 		return nil, err
 	}
 
@@ -77,10 +77,7 @@ func (pr *PresetRepository) Update(preset *model.Preset) (*model.Preset, error) 
 	CleanName(savedNames, preset)
 
 	// TODO: needs to literaly UPDATE instead of DELETE and CREATE
-	if err := pr.Conn.Delete(&model.TimerUnit{}, "preset_id = ?", preset.ID).Error; err != nil {
-		return nil, err
-	}
-	if err := pr.Conn.Model(&preset).Updates(preset).Error; err != nil {
+	if err := pr.Conn.Model(&preset).Updates(&preset).Error; err != nil {
 		return nil, err
 	}
 	go pr.SetCache(preset)
