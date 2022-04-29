@@ -4,6 +4,7 @@ WORKDIR /go/ultimate_timer/
 
 RUN apk update \
 &&  apk add --no-cache bash \
+&&  rm -rf /var/lib/apt/lists/* \
 &&  export GO111MODULE=on
 
 COPY ./app/ .
