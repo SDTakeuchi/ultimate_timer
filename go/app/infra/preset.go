@@ -76,7 +76,6 @@ func (pr *PresetRepository) Update(preset *model.Preset) (*model.Preset, error) 
 	}
 	CleanName(savedNames, preset)
 
-	// TODO: needs to literaly UPDATE instead of DELETE and CREATE
 	if err := pr.Conn.Model(&preset).Updates(&preset).Error; err != nil {
 		return nil, err
 	}

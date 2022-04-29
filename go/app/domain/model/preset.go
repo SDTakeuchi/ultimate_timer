@@ -1,7 +1,6 @@
 package model
 
 import (
-	// "errors"
 	"encoding/json"
 	"time"
 	"ultimate_timer/services"

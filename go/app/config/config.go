@@ -1,13 +1,12 @@
 package config
 
 import (
-	// "ultimate_timer/domain/model"
 	"fmt"
-	"os"
+	"github.com/joho/godotenv"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
-	"gorm.io/driver/postgres"
-	"github.com/joho/godotenv"
+	"os"
 )
 
 func NewDB() *gorm.DB {
@@ -29,7 +28,6 @@ func NewDB() *gorm.DB {
 		panic(err.Error())
 	}
 	db.Set("gorm:table_options", "ENGINE=InnoDB")
-	// db.AutoMigrate(&model.Preset{})
 	db.Logger = db.Logger.LogMode(logger.Info)
 
 	return db

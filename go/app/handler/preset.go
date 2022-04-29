@@ -3,10 +3,8 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
-
-	"ultimate_timer/usecase"
-
 	"github.com/labstack/echo"
+	"ultimate_timer/usecase"
 )
 
 type PresetHandler interface {
@@ -55,11 +53,6 @@ func (ph *presetHandler) Post() echo.HandlerFunc {
 		if err := c.Bind(&req); err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
 		}
-		// var tuMap []map[string]int
-		// for _, tu := range req.TimerUnits {
-		// 	m := services.StructToMapInt(tu)
-		// 	tuMap = append(tuMap, m)
-		// }
 		tuJson, err := json.Marshal(req.TimerUnits)
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
@@ -153,11 +146,6 @@ func (ph *presetHandler) Put() echo.HandlerFunc {
 		if err := c.Bind(&req); err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
 		}
-		// var tuMap []map[string]int
-		// for _, tu := range req.TimerUnits {
-		// 	m := services.StructToMapInt(tu)
-		// 	tuMap = append(tuMap, m)
-		// }
 		tuJson, err := json.Marshal(req.TimerUnits)
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, err.Error())
