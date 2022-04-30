@@ -4,11 +4,13 @@ import {Play} from "../../../components/play/Play"
 
 const TimerDetail: NextPage = () => {
   const router = useRouter();
-  const presetId: string = String(router.query);
+  const { presetId } = router.query;
+  const time = new Date();
+  time.setSeconds(time.getSeconds() + 600);
 
   return (
     <div>
-      <Play id={presetId}/>
+      <Play expiryTimestamp={time} id={presetId}/>
     </div>
   );
 };

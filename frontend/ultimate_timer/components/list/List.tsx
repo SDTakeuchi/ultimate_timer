@@ -13,10 +13,10 @@ interface iPresets {
   loop_count: number,
   waits_confirm_each: boolean,
   waits_confirm_last: boolean,
-  timer_unit?: {
+  timer_unit: {
     durations: number,
     order: number,
-  },
+  }[],
 }
 
 export const TimerList: React.FC = () => {
@@ -29,6 +29,9 @@ export const TimerList: React.FC = () => {
       .get<iPresets[]>(url)
       .then((response) => {
         setPresets(response.data);
+      })
+      .catch((error) => {
+        alert(error.message);
       });
   }, []);
 
