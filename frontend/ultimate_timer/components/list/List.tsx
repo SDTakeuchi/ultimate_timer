@@ -14,7 +14,7 @@ interface iPresets {
   waits_confirm_each: boolean,
   waits_confirm_last: boolean,
   timer_unit: {
-    durations: number,
+    duration: number,
     order: number,
   }[],
 }
@@ -44,6 +44,7 @@ export const TimerList: React.FC = () => {
           return <TimerCard
                     name={preset.name}
                     display_order={preset.display_order}
+                    time={preset.timer_unit[0].duration}
                     id={preset.id}
                   />;
         })}

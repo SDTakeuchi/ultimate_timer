@@ -1,11 +1,30 @@
 import React from 'react';
 import axios from 'axios';
 import { useRouter, NextRouter } from 'next/router'
-import { useTimer } from "react-timer-hook";
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
+import secondToMinute from '../../lib/second_to_minute';
+import zeroPadding from '../../lib/zfill'
 import presetURL from "../../config/settings";
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      '& > *': {
+        margin: theme.spacing(1),
+      },
+    },
+  }),
+);
+
 interface Props {
-  expiryTimestamp: Date;
+  // expiryTimestamp: Date;
   id: string;
 }
 
@@ -17,14 +36,24 @@ interface iPreset {
   waits_confirm_each: boolean,
   waits_confirm_last: boolean,
   timer_unit: {
-    duration: number,
+    durations: number,
     order: number,
-  }[],
+  },
 }
 
-export const Play: React.FC<Props> = ({ expiryTimestamp, id }) => {
+type TimeObj = {
+  hour: number,
+  min: number,
+  sec: number,
+}
+
+export const Play: React.FC<Props> = ({ id }) => {
   const [preset, setPreset] = React.useState<iPreset>();
-  const router: NextRouter = useRouter()
+  // TODO: put interface below
+  const [remainingTime, setRemainingTime] = React.useState<string>('00:00:00');
+  const [isRunning, setIsRunning] = React.useState<boolean>(false);
+  let interval: Timer = React.useRef();
+  const classes = useStyles();
 
   const url: string = presetURL + id;
   React.useEffect(() => {
@@ -38,55 +67,60 @@ export const Play: React.FC<Props> = ({ expiryTimestamp, id }) => {
       });
   }, []);
 
-  // React.useEffect(() => {
-  //   if (preset?.timer_unit === undefined || preset?.timer_unit === null) {
-  //     router.push("/");
-  //   }
-  // }, [])
 
-  let remainingTime: Date = new Date();
-  // TODO: fix ide error below
-  // remainingTime.setSeconds(remainingTime.getSeconds() + preset?.timer_unit?.duration ?? 0);
-  remainingTime.setSeconds(remainingTime.getSeconds() + 600);
-  // let remainingTime: number = 600;
-
-  const {
-    seconds,
-    minutes,
-    hours,
-    days,
-    isRunning,
-    start,
-    pause,
-    resume,
-    restart,
-  } = useTimer({
-    expiryTimestamp,
-    onExpire: () => console.warn("onExpire called"),
-  });
+  const startTimer = (sec: number): void => {
+    setIsRunning(true);
+    interval = setInterval(() => {
+      const cvtedTime: object = secondToMinute(sec--);
+      const fmtedTime: string = 
+        zeroPadding(cvtedTime['hour'], 2) + ':' + 
+        zeroPadding(cvtedTime['min'], 2) + ':' + 
+        zeroPadding(cvtedTime['sec'], 2);
+      setRemainingTime(fmtedTime);
+    }, 1000)
+  }
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <h1>react-timer-hook </h1>
-      <p>Timer Demo</p>
-      <div style={{ fontSize: "100px" }}>
-        <span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:
-        <span>{seconds}</span>
+    <div className="timer-container">
+      <h1>
+        {preset?.name}
+      </h1>
+      <div>
+        {/* TODO want to show remaning sets instead */}
+        Loop: {preset?.loop_count} times
       </div>
-      <p>{isRunning ? "Running" : "Not running"}</p>
-      <button onClick={start}>Start</button>
-      <button onClick={pause}>Pause</button>
-      <button onClick={resume}>Resume</button>
-      <button
-        onClick={() => {
-          const time = new Date();
-          // time.setSeconds(time.getSeconds() + preset?.timer_unit.duration);
-          time.setSeconds(time.getSeconds() + 600);
-          restart(time);
-        }}
-      >
-        Restart
-      </button>
+      <div>
+        Waits Confirm for each timer unit: {preset?.waits_confirm_each === true ? "YES" : "NO"}
+      </div>
+      <div>
+        Waits Confirm for the last timer unit: {preset?.waits_confirm_last === true ? "YES" : "NO"}
+      </div>
+      <div>
+        {remainingTime}
+      </div>
+      
+      <div className={classes.root}>
+        {/* <ButtonGroup color="primary" aria-label="outlined primary button group">
+          <Button>One</Button>
+          <Button>Two</Button>
+          <Button>Three</Button>
+        </ButtonGroup>
+        <ButtonGroup variant="contained" color="primary" aria-label="contained primary button group">
+          <Button>One</Button>
+          <Button>Two</Button>
+          <Button>Three</Button>
+        </ButtonGroup> */}
+        <ButtonGroup color="primary" aria-label="outlined primary button group">
+          <Button
+            disabled={isRunning}
+            onClick={() => startTimer(preset?.timer_unit[0].duration)}>
+            Play
+          </Button>
+          <Button>Pause</Button>
+          {/* <Button>Resume</Button> */}
+          <Button>Restart</Button>
+        </ButtonGroup>
+      </div>
     </div>
-  );
+  )
 }

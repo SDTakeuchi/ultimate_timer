@@ -11,7 +11,9 @@ import Typography from '@material-ui/core/Typography';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';
 import EditIcon from '@material-ui/icons/Edit';
-import presetURL from '../../config/settings'
+import presetURL from '../../config/settings';
+import secondToMinute from '../../lib/second_to_minute';
+import zeroPadding from '../../lib/zfill';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -39,6 +41,7 @@ const useStyles = makeStyles({
 interface Props {
   name: string;
   display_order: number;
+  time: number;
   id: string;
 }
 
@@ -46,7 +49,7 @@ interface iDeletedPreset {
   error: string;
 }
 
-export const TimerCard: React.FC<Props> = ({ name, display_order, id }) => {
+export const TimerCard: React.FC<Props> = ({ name, display_order, time, id }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -57,6 +60,12 @@ export const TimerCard: React.FC<Props> = ({ name, display_order, id }) => {
   const handleClose = (): void => {
     setOpen(false);
   };
+
+  const cvtedTime: object = secondToMinute(time);
+  const fmtedTime: string = 
+    zeroPadding(cvtedTime['hour'], 2) + ':' + 
+    zeroPadding(cvtedTime['min'], 2) + ':' + 
+    zeroPadding(cvtedTime['sec'], 2);
 
   const deletePreset = (): void => {
     const deleteURL: string = presetURL + id;
@@ -89,9 +98,7 @@ export const TimerCard: React.FC<Props> = ({ name, display_order, id }) => {
             adjective
           </Typography>
           <Typography variant="body2" component="p">
-            well meaning and kindly.
-            <br />
-            {'"a benevolent smile"'}
+            {fmtedTime}
           </Typography>
         </CardContent>
         <CardActions>
