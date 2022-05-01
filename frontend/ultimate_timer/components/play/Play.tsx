@@ -9,6 +9,8 @@ import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import secondToMinute from '../../lib/second_to_minute';
 import zeroPadding from '../../lib/zfill'
 import presetURL from "../../config/settings";
+// import playAudio from '../../lib/play_audio';
+import { convertCompilerOptionsFromJson } from 'typescript';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,6 +53,7 @@ export const Play: React.FC<Props> = ({ id }) => {
   const [preset, setPreset] = React.useState<iPreset>();
   // TODO: put interface below
   const [remainingTime, setRemainingTime] = React.useState<string>('00:00:00');
+  const [remainingTimeInt, setRemainingTimeInt] = React.useState<number>(0);
   const [isRunning, setIsRunning] = React.useState<boolean>(false);
   let interval: Timer = React.useRef();
   const classes = useStyles();
@@ -61,24 +64,58 @@ export const Play: React.FC<Props> = ({ id }) => {
       .get<iPreset>(url)
       .then((response) => {
         setPreset(response.data);
+        setRemainingTimeInt(response.data.timer_unit[0].duration);
+        const cvtedTime_: object = secondToMinute(remainingTimeInt);
+        const fmtedTime_: string = 
+          zeroPadding(cvtedTime_['hour'], 2) + ':' + 
+          zeroPadding(cvtedTime_['min'], 2) + ':' + 
+          zeroPadding(cvtedTime_['sec'], 2);
+        setRemainingTime(fmtedTime_);
       })
       .catch((error) => {
         alert(error.message);
       });
   }, []);
 
-
-  const startTimer = (sec: number): void => {
+  const restartTimer = (): void => {
+    setRemainingTimeInt(preset?.timer_unit[0].duration);
     setIsRunning(true);
-    interval = setInterval(() => {
-      const cvtedTime: object = secondToMinute(sec--);
-      const fmtedTime: string = 
-        zeroPadding(cvtedTime['hour'], 2) + ':' + 
-        zeroPadding(cvtedTime['min'], 2) + ':' + 
-        zeroPadding(cvtedTime['sec'], 2);
-      setRemainingTime(fmtedTime);
-    }, 1000)
   }
+  
+  const audioPlay = (): void => {
+    const audio: HTMLAudioElement = new Audio('https://audio-previews.elements.envatousercontent.com/files/148785970/preview.mp3?response-content-disposition=attachment%3B+filename%3D%22RZFWLXE-bell-hop-bell.mp3%22');
+    audio.play();
+  }
+
+  React.useEffect(() => {
+    let interval_: Timer = null;
+
+    if (isRunning) {
+      interval_ = setInterval(() => {
+        if (remainingTimeInt === 0) {
+          setIsRunning(false);
+          audioPlay();
+          const cvtedTime: object = secondToMinute(preset?.timer_unit[0].duration);
+          const fmtedTime: string = 
+            zeroPadding(cvtedTime['hour'], 2) + ':' + 
+            zeroPadding(cvtedTime['min'], 2) + ':' + 
+            zeroPadding(cvtedTime['sec'], 2);
+          setRemainingTime(fmtedTime);
+          clearInterval(interval_);
+        }
+        setRemainingTimeInt(remainingTimeInt => remainingTimeInt - 1);
+        const cvtedTime: object = secondToMinute(remainingTimeInt);
+        const fmtedTime: string = 
+          zeroPadding(cvtedTime['hour'], 2) + ':' + 
+          zeroPadding(cvtedTime['min'], 2) + ':' + 
+          zeroPadding(cvtedTime['sec'], 2);
+        setRemainingTime(fmtedTime);
+      }, 1000)
+    } else {
+      clearInterval(interval_);
+    }
+    return () => clearInterval(interval_);
+  }, [isRunning, remainingTimeInt, remainingTime])
 
   return (
     <div className="timer-container">
@@ -95,30 +132,26 @@ export const Play: React.FC<Props> = ({ id }) => {
       <div>
         Waits Confirm for the last timer unit: {preset?.waits_confirm_last === true ? "YES" : "NO"}
       </div>
-      <div>
+      <h2>
         {remainingTime}
-      </div>
-      
+      </h2>
       <div className={classes.root}>
-        {/* <ButtonGroup color="primary" aria-label="outlined primary button group">
-          <Button>One</Button>
-          <Button>Two</Button>
-          <Button>Three</Button>
-        </ButtonGroup>
-        <ButtonGroup variant="contained" color="primary" aria-label="contained primary button group">
-          <Button>One</Button>
-          <Button>Two</Button>
-          <Button>Three</Button>
-        </ButtonGroup> */}
         <ButtonGroup color="primary" aria-label="outlined primary button group">
           <Button
             disabled={isRunning}
-            onClick={() => startTimer(preset?.timer_unit[0].duration)}>
+            onClick={() => setIsRunning(true)} >
             Play
           </Button>
-          <Button>Pause</Button>
-          {/* <Button>Resume</Button> */}
-          <Button>Restart</Button>
+          <Button
+            disabled={!isRunning}
+            onClick={() => setIsRunning(false)} >
+            Pause
+          </Button>
+          <Button
+            disabled={isRunning}
+            onClick={() => restartTimer()} >
+            Restart
+          </Button>
         </ButtonGroup>
       </div>
     </div>
