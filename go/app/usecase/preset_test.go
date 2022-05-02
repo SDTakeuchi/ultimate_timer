@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"encoding/json"
 	"ultimate_timer/domain/repository"
 	"ultimate_timer/domain/model"
 	"ultimate_timer/usecase"
@@ -14,15 +15,21 @@ type testPresetUsecase struct {
 	presetRepo repository.PresetRepository
 }
 
+
+type timerUnits struct {
+	order int
+	duration int
+}
+
 var (
 	presetTable = []struct {
 		id string
-		name             string     
-		displayOrder     int        
-		loopCount        int        
-		waitsConfirmEach bool       
-		waitsConfirmLast bool       
-		timerUnits       []model.TimerUnit
+		name             string
+		displayOrder     int
+		loopCount        int
+		waitsConfirmEach bool
+		waitsConfirmLast bool
+		timerUnits       []timerUnits
 	} {
 		{
 			"f9b1303e-76e6-4071-8fb0-0599a6247376",
@@ -31,9 +38,9 @@ var (
 			2,
 			false,
 			true,
-			[]model.TimerUnit{} {
-				Order: 4,
-				Duration: 123,
+			[]timerUnits{
+				timerUnits{order: 1, duration: 60},
+				timerUnits{order: 2, duration: 120},
 			},
 		},
 	}
