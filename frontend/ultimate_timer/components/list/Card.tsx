@@ -12,7 +12,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';
 import EditIcon from '@material-ui/icons/Edit';
 import presetURL from '../../config/settings';
-import secondToMinute from '../../lib/second_to_minute';
+import { secondToMinute } from '../../lib/second_to_minute';
 import zeroPadding from '../../lib/zfill';
 
 import Dialog from '@material-ui/core/Dialog';

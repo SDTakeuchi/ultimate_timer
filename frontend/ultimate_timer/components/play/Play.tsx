@@ -6,7 +6,7 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
-import secondToMinute from '../../lib/second_to_minute';
+import { TimeObj, secondToMinute } from '../../lib/second_to_minute';
 import zeroPadding from '../../lib/zfill'
 import presetURL from "../../config/settings";
 // import playAudio from '../../lib/play_audio';
@@ -43,19 +43,13 @@ interface iPreset {
   },
 }
 
-type TimeObj = {
-  hour: number,
-  min: number,
-  sec: number,
-}
-
 export const Play: React.FC<Props> = ({ id }) => {
   const [preset, setPreset] = React.useState<iPreset>();
   // TODO: put interface below
   const [remainingTime, setRemainingTime] = React.useState<string>('00:00:00');
   const [remainingTimeInt, setRemainingTimeInt] = React.useState<number>(0);
   const [isRunning, setIsRunning] = React.useState<boolean>(false);
-  let interval: Timer = React.useRef();
+  // let interval: Timer = React.useRef();
   const classes = useStyles();
 
   const url: string = presetURL + id;
@@ -65,21 +59,28 @@ export const Play: React.FC<Props> = ({ id }) => {
       .then((response) => {
         setPreset(response.data);
         setRemainingTimeInt(response.data.timer_unit[0].duration);
-        const cvtedTime_: object = secondToMinute(remainingTimeInt);
-        const fmtedTime_: string = 
-          zeroPadding(cvtedTime_['hour'], 2) + ':' + 
-          zeroPadding(cvtedTime_['min'], 2) + ':' + 
-          zeroPadding(cvtedTime_['sec'], 2);
-        setRemainingTime(fmtedTime_);
+        const fmtedTime: string = fmtTimer(remainingTimeInt);
+        setRemainingTime(fmtedTime);
+        console.log(remainingTime);
+        console.log(remainingTimeInt);
       })
       .catch((error) => {
-        alert(error.message);
+        console.log(error.message);
       });
   }, []);
 
   const restartTimer = (): void => {
     setRemainingTimeInt(preset?.timer_unit[0].duration);
     setIsRunning(true);
+  }
+
+  const fmtTimer = (timeInt: number): string => {
+    const cvtedTime: TimeObj = secondToMinute(timeInt);
+    const fmtedTime: string = 
+      zeroPadding(cvtedTime['hour'], 2) + ':' + 
+      zeroPadding(cvtedTime['min'], 2) + ':' + 
+      zeroPadding(cvtedTime['sec'], 2);
+    return fmtedTime;
   }
   
   const audioPlay = (): void => {
@@ -95,20 +96,12 @@ export const Play: React.FC<Props> = ({ id }) => {
         if (remainingTimeInt === 0) {
           setIsRunning(false);
           audioPlay();
-          const cvtedTime: object = secondToMinute(preset?.timer_unit[0].duration);
-          const fmtedTime: string = 
-            zeroPadding(cvtedTime['hour'], 2) + ':' + 
-            zeroPadding(cvtedTime['min'], 2) + ':' + 
-            zeroPadding(cvtedTime['sec'], 2);
+          const fmtedTime: string = fmtTimer(preset?.timer_unit[0].duration);
           setRemainingTime(fmtedTime);
           clearInterval(interval_);
         }
         setRemainingTimeInt(remainingTimeInt => remainingTimeInt - 1);
-        const cvtedTime: object = secondToMinute(remainingTimeInt);
-        const fmtedTime: string = 
-          zeroPadding(cvtedTime['hour'], 2) + ':' + 
-          zeroPadding(cvtedTime['min'], 2) + ':' + 
-          zeroPadding(cvtedTime['sec'], 2);
+        const fmtedTime: string = fmtTimer(remainingTimeInt);
         setRemainingTime(fmtedTime);
       }, 1000)
     } else {
