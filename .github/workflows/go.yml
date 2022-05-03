@@ -25,4 +25,6 @@ jobs:
         go build -v ./...
 
     - name: Test
-      run: go test -v ./usecase
+      run: |
+        cd ./go/app/
+        go test -v ./usecase
