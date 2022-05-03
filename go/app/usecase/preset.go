@@ -48,6 +48,7 @@ func (pr *presetUsecase) Create(
 	if err != nil {
 		return nil, err
 	}
+
 	createdPreset, err := pr.presetRepo.Create(preset)
 	if err != nil {
 		return nil, err
