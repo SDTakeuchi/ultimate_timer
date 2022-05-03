@@ -3,7 +3,7 @@ FROM golang:1.18.1-alpine3.15
 WORKDIR /go/ultimate_timer/
 
 RUN apk update \
-&&  apk add --no-cache bash \
+&&  apk add --no-cache bash gcc musl-dev \
 &&  rm -rf /var/lib/apt/lists/* \
 &&  export GO111MODULE=on
 
