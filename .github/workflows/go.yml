@@ -20,6 +20,7 @@ jobs:
 
     - name: Build
       run: |
+        cd ./go/app/
         go mod tidy
         go build -v ./...
 
