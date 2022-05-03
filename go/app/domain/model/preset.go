@@ -3,7 +3,7 @@ package model
 import (
 	"encoding/json"
 	"time"
-	"ultimate_timer/services"
+	// "ultimate_timer/services"
 )
 
 type Preset struct {
@@ -14,6 +14,8 @@ type Preset struct {
 	WaitsConfirmEach bool            `db:"waits_confirm_each"`
 	WaitsConfirmLast bool            `db:"waits_confirm_last"`
 	TimerUnits       json.RawMessage `db:"timer_unit"`
+	// TODO: clean up line below
+	// TimerUnits       []TimerUnit `db:"timer_unit" gorm:"embedded;column:timer_units;type:longtext"`
 }
 
 func NewPreset(
@@ -23,11 +25,9 @@ func NewPreset(
 	timerUnits json.RawMessage) (*Preset, error) {
 
 	now := time.Now()
-	id := services.GenUuid()
 
 	preset := &Preset{
 		BaseModel: BaseModel{
-			ID:        id,
 			CreatedAt: now,
 			UpdatedAt: now,
 		},

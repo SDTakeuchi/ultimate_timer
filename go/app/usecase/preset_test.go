@@ -1,11 +1,11 @@
 package usecase_test
 
 import (
-	"encoding/json"
-	"ultimate_timer/domain/repository"
-	"ultimate_timer/domain/model"
-	"ultimate_timer/usecase"
+	// "encoding/json"
 	"testing"
+	"ultimate_timer/domain/model"
+	"ultimate_timer/domain/repository"
+	"ultimate_timer/usecase"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -15,22 +15,28 @@ type testPresetUsecase struct {
 	presetRepo repository.PresetRepository
 }
 
-
 type timerUnits struct {
-	order int
+	order    int
 	duration int
 }
 
+// id               string
+// name             string
+// displayOrder     int
+// loopCount        int
+// waitsConfirmEach bool
+// waitsConfirmLast bool
+// timerUnits       []timerUnits
+
 var (
 	presetTable = []struct {
-		id string
-		name             string
-		displayOrder     int
-		loopCount        int
-		waitsConfirmEach bool
-		waitsConfirmLast bool
-		timerUnits       []timerUnits
+		name   string
+		arg    string
+		preset model.Preset
+		err    error
 	} {
+		"success",
+		"f9b1303e-76e6-4071-8fb0-0599a6247376",
 		{
 			"f9b1303e-76e6-4071-8fb0-0599a6247376",
 			"test_name",
@@ -43,6 +49,7 @@ var (
 				timerUnits{order: 2, duration: 120},
 			},
 		},
+		nil,
 	}
 )
 

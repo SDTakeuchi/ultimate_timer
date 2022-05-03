@@ -28,7 +28,7 @@ func (pr *PresetRepository) SetCache(preset *model.Preset) error {
 	if err != nil {
 		return err
 	}
-	err = pr.Cache.Set(context.Background(), preset.ID, p, time.Hour*24).Err()
+	err = pr.Cache.Set(context.Background(), preset.ID.String(), p, time.Hour*24).Err()
 	if err != nil {
 		return err
 	}

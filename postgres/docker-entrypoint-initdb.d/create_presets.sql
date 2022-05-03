@@ -1,5 +1,7 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE IF NOT EXISTS presets (
-    id varchar(36) PRIMARY KEY,
+    id uuid DEFAULT uuid_generate_v4 (),
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     name varchar(128) NOT NULL,
@@ -7,5 +9,6 @@ CREATE TABLE IF NOT EXISTS presets (
     loop_count integer NOT NULL,
     waits_confirm_each boolean NOT NULL,
     waits_confirm_last boolean NOT NULL,
-    timer_units jsonb
+    timer_units jsonb,
+    PRIMARY KEY (id)
 );

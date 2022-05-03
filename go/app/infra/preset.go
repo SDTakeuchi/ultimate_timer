@@ -5,6 +5,7 @@ import (
 	"gorm.io/gorm"
 	"ultimate_timer/domain/model"
 	"ultimate_timer/domain/repository"
+	"github.com/google/uuid"
 )
 
 type PresetRepository struct {
@@ -53,7 +54,11 @@ func (pr *PresetRepository) FindByID(id string) (*model.Preset, error) {
 	}
 	if err == redis.Nil {
 		// query to Postgres
-		preset = &model.Preset{BaseModel: model.BaseModel{ID: id}}
+		idUuid, err := uuid.Parse(id)
+		if err != nil {
+			return nil, err
+		}
+		preset = &model.Preset{BaseModel: model.BaseModel{ID: idUuid}}
 		if err = pr.Conn.Take(&preset).Error; err != nil {
 			return nil, err
 		}
@@ -85,7 +90,6 @@ func (pr *PresetRepository) Update(preset *model.Preset) (*model.Preset, error) 
 }
 
 func (pr *PresetRepository) Delete(preset *model.Preset) error {
-	// TODO: are related TimerUnits deleted too??
 	if err := pr.Conn.Delete(&preset).Error; err != nil {
 		return err
 	}

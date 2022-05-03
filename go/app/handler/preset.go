@@ -70,7 +70,7 @@ func (ph *presetHandler) Post() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, err.Error())
 		}
 		res := &responsePreset{
-			ID:               createdPreset.ID,
+			ID:               createdPreset.ID.String(),
 			Name:             createdPreset.Name,
 			LoopCount:        createdPreset.LoopCount,
 			WaitsConfirmEach: createdPreset.WaitsConfirmEach,
@@ -96,7 +96,7 @@ func (ph *presetHandler) Get() echo.HandlerFunc {
 		var res []responsePreset
 		for _, fp := range foundPresets {
 			p := responsePreset{
-				ID:               fp.ID,
+				ID:               fp.ID.String(),
 				Name:             fp.Name,
 				LoopCount:        fp.LoopCount,
 				WaitsConfirmEach: fp.WaitsConfirmEach,
@@ -122,7 +122,7 @@ func (ph *presetHandler) FindByID() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, err.Error())
 		}
 		res := responsePreset{
-			ID:               foundPreset.ID,
+			ID:               foundPreset.ID.String(),
 			Name:             foundPreset.Name,
 			LoopCount:        foundPreset.LoopCount,
 			WaitsConfirmEach: foundPreset.WaitsConfirmEach,
@@ -165,7 +165,7 @@ func (ph *presetHandler) Put() echo.HandlerFunc {
 		}
 
 		res := responsePreset{
-			ID:               updatedPreset.ID,
+			ID:               updatedPreset.ID.String(),
 			Name:             updatedPreset.Name,
 			LoopCount:        updatedPreset.LoopCount,
 			WaitsConfirmEach: updatedPreset.WaitsConfirmEach,
