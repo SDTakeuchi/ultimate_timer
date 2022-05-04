@@ -14,8 +14,6 @@ type Preset struct {
 	WaitsConfirmEach bool            `db:"waits_confirm_each"`
 	WaitsConfirmLast bool            `db:"waits_confirm_last"`
 	TimerUnits       json.RawMessage `db:"timer_unit"`
-	// TODO: clean up line below
-	// TimerUnits       []TimerUnit `db:"timer_unit" gorm:"embedded;column:timer_units;type:longtext"`
 }
 
 func NewPreset(
