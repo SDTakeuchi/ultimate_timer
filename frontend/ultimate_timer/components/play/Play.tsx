@@ -26,7 +26,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-  // expiryTimestamp: Date;
   id: string;
 }
 
@@ -45,34 +44,9 @@ interface iPreset {
 
 export const Play: React.FC<Props> = ({ id }) => {
   const [preset, setPreset] = React.useState<iPreset>();
-  // TODO: put interface below
-  const [remainingTime, setRemainingTime] = React.useState<string>('00:00:00');
-  const [remainingTimeInt, setRemainingTimeInt] = React.useState<number>(0);
   const [isRunning, setIsRunning] = React.useState<boolean>(false);
   // let interval: Timer = React.useRef();
   const classes = useStyles();
-
-  const url: string = presetURL + id;
-  React.useEffect(() => {
-    axios
-      .get<iPreset>(url)
-      .then((response) => {
-        setPreset(response.data);
-        setRemainingTimeInt(response.data.timer_unit[0].duration);
-        const fmtedTime: string = fmtTimer(remainingTimeInt);
-        setRemainingTime(fmtedTime);
-        console.log(remainingTime);
-        console.log(remainingTimeInt);
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
-  }, []);
-
-  const restartTimer = (): void => {
-    setRemainingTimeInt(preset?.timer_unit[0].duration);
-    setIsRunning(true);
-  }
 
   const fmtTimer = (timeInt: number): string => {
     const cvtedTime: TimeObj = secondToMinute(timeInt);
@@ -82,9 +56,35 @@ export const Play: React.FC<Props> = ({ id }) => {
       zeroPadding(cvtedTime['sec'], 2);
     return fmtedTime;
   }
-  
-  const audioPlay = (): void => {
-    const audio: HTMLAudioElement = new Audio('https://audio-previews.elements.envatousercontent.com/files/148785970/preview.mp3?response-content-disposition=attachment%3B+filename%3D%22RZFWLXE-bell-hop-bell.mp3%22');
+  const [remainingTimeInt, setRemainingTimeInt] = React.useState<number>(0);
+  const [defTime, setDefTime] = React.useState<number>(0);
+  const [remainingTime, setRemainingTime] = React.useState<string>(fmtTimer(remainingTimeInt));
+
+  const url: string = presetURL + id;
+  React.useEffect(() => {
+    axios
+      .get<iPreset>(url)
+      .then((response) => {
+        setPreset(response.data);
+        setRemainingTimeInt(response.data.timer_unit[0].duration);
+        setDefTime(response.data.timer_unit[0].duration);
+        setRemainingTime(fmtTimer(remainingTimeInt));
+        console.log(remainingTime);
+        console.log(remainingTimeInt);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  }, []);
+
+  const restartTimer = (): void => {
+    setRemainingTimeInt(defTime);
+    setIsRunning(true);
+  }
+
+  const playAudio = (): void => {
+    const audioUrl: string = 'https://audio-previews.elements.envatousercontent.com/files/148785970/preview.mp3?response-content-disposition=attachment%3B+filename%3D%22RZFWLXE-bell-hop-bell.mp3%22';
+    const audio: HTMLAudioElement = new Audio(audioUrl);
     audio.play();
   }
 
@@ -93,16 +93,16 @@ export const Play: React.FC<Props> = ({ id }) => {
 
     if (isRunning) {
       interval_ = setInterval(() => {
+        console.log(remainingTimeInt)
+        setRemainingTimeInt(remainingTimeInt - 1);
+        setRemainingTime(fmtTimer(remainingTimeInt));
         if (remainingTimeInt === 0) {
           setIsRunning(false);
-          audioPlay();
-          const fmtedTime: string = fmtTimer(preset?.timer_unit[0].duration);
-          setRemainingTime(fmtedTime);
-          clearInterval(interval_);
+          playAudio();
+          setRemainingTimeInt(defTime);
+          setRemainingTime(fmtTimer(defTime));
+          return () => clearInterval(interval_);
         }
-        setRemainingTimeInt(remainingTimeInt => remainingTimeInt - 1);
-        const fmtedTime: string = fmtTimer(remainingTimeInt);
-        setRemainingTime(fmtedTime);
       }, 1000)
     } else {
       clearInterval(interval_);
