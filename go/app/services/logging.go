@@ -1,10 +1,15 @@
 package services
 
 import (
+	"log"
 	"os"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
+
+func Logf(format string, v ...interface{}) {
+	log.Printf(format, v...)
+}
 
 var Logger echo.MiddlewareFunc = middleware.LoggerWithConfig(middleware.LoggerConfig{
 	Format: logFormat(),

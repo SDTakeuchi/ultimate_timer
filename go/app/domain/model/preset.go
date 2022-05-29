@@ -3,7 +3,6 @@ package model
 import (
 	"encoding/json"
 	"time"
-	// "ultimate_timer/services"
 )
 
 type Preset struct {

@@ -11,14 +11,14 @@ func CleanName(savedNames []string, p *model.Preset) {
 	}
 	nameIsDuplicate := contains[string](savedNames, p.Name)
 	if nameIsDuplicate {
-		timeNow := time.Now().Format("_20060102_150405")
-		p.Name += timeNow
+		now := time.Now().Format("_20060102_150405")
+		p.Name += now
 	}
 }
 
-func contains[T comparable] (elems []T, v T) bool {
+func contains[T comparable] (elems []T, elem T) bool {
 	for _, s := range elems {
-		if v == s { return true }
+		if elem == s { return true }
 	}
 	return false
 }
