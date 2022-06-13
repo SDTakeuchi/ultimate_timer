@@ -22,7 +22,7 @@ func getDBMock() (*gorm.DB, sqlmock.Sqlmock, error) {
 	return gdb, mock, nil
 }
 
-func TestPresetRepository_Create(t *testing.T) {
+func TestTimerPresetRepository_Create(t *testing.T) {
 	db, mock, err := getDBMock()
 	if err != nil {
 		t.Fatal(err)
@@ -30,7 +30,7 @@ func TestPresetRepository_Create(t *testing.T) {
 	defer db.Close()
 	db.LogMode(true)
 
-	PresetRepository{DB: db}
+	TimerPresetRepository{DB: db}
 
 	id := "e6ee385e-4ef0-4eb6-ac3f-d6dbbbd503cd"
 	createdAt := "2022-01-01 12:34:56"
@@ -45,7 +45,7 @@ func TestPresetRepository_Create(t *testing.T) {
 
 	// Mock設定
 	mock.ExpectQuery(regexp.QuoteMeta(
-		`INSERT INTO "presets" (
+		`INSERT INTO "timerPresets" (
 				"id",
 				"created_at",
 				"updated_at",
@@ -75,27 +75,27 @@ func TestPresetRepository_Create(t *testing.T) {
 		Conn *gorm.DB
 	}
 	type args struct {
-		preset *model.Preset
+		timerPreset *model.TimerPreset
 	}
 	tests := []struct {
 		name    string
 		fields  fields
 		args    args
-		want    *model.Preset
+		want    *model.TimerPreset
 		wantErr bool
 	}{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			pr := &PresetRepository{
+			pr := &TimerPresetRepository{
 				Conn: tt.fields.Conn,
 			}
-			got, err := pr.Create(tt.args.preset)
+			got, err := pr.Create(tt.args.timerPreset)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("PresetRepository.Create() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("TimerPresetRepository.Create() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("PresetRepository.Create() = %v, want %v", got, tt.want)
+				t.Errorf("TimerPresetRepository.Create() = %v, want %v", got, tt.want)
 			}
 		})
 	}

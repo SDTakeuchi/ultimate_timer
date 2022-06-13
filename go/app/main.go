@@ -21,13 +21,13 @@ func main() {
 	}
 	port := fmt.Sprintf(":%s", os.Getenv("GO_PORT"))
 
-	presetRepository := infra.NewPresetRepository(config.NewDB(), config.NewRedis())
-	presetUsecase := usecase.NewPresetUsecase(presetRepository)
-	presetHandler := handler.NewPresetHandler(presetUsecase)
+	timerPresetRepository := infra.NewTimerPresetRepository(config.NewDB(), config.NewRedis())
+	timerPresetUsecase := usecase.NewTimerPresetUsecase(timerPresetRepository)
+	timerPresetHandler := handler.NewTimerPresetHandler(timerPresetUsecase)
 
 	e := echo.New()
 	e.Use(services.Logger)
 	e.Use(middleware.Recover())
-	handler.InitRouting(e, presetHandler)
+	handler.InitRouting(e, timerPresetHandler)
 	e.Logger.Fatal(e.Start(port))
 }

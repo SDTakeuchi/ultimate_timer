@@ -13,15 +13,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// presetRepoインターフェースを満たすtestPresetUsecaseを作る
-type testPresetUsecase struct {
-	repository.PresetRepository
+// timerPresetRepoインターフェースを満たすtestTimerPresetUsecaseを作る
+type testTimerPresetUsecase struct {
+	repository.TimerPresetRepository
 }
 
-type presetTableStruct struct {
+type timerPresetTableStruct struct {
 	name   string
 	id    string
-	preset model.Preset
+	timerPreset model.TimerPreset
 	err    error
 }
 
@@ -34,11 +34,11 @@ var json2, _ = json.Marshal([]byte(testString2))
 var id2, _ = uuid.Parse("b0987480-5d8b-4e2e-940b-dafc75c2a5a0")
 
 var (
-	presetTable = []presetTableStruct {
+	timerPresetTable = []timerPresetTableStruct {
 		{
 			"test_1",
 			"f9b1303e-76e6-4071-8fb0-0599a6247376",
-			model.Preset{
+			model.TimerPreset{
 				BaseModel: model.BaseModel{
 					ID:        id1,
 					CreatedAt: time.Now(),
@@ -56,13 +56,13 @@ var (
 		{
 			"test_2",
 			"b0987480-5d8b-4e2e-940b-dafc75c2a5a0",
-			model.Preset{
+			model.TimerPreset{
 				BaseModel: model.BaseModel{
 					ID:        id2,
 					CreatedAt: time.Now(),
 					UpdatedAt: time.Now(),
 				},
-				Name: "second_test_preset",
+				Name: "second_test_timerPreset",
 				DisplayOrder: 2,
 				LoopCount: 100,
 				WaitsConfirmEach: true,
@@ -75,133 +75,133 @@ var (
 )
 
 // FindByIdメソッドの実装を定義
-func (tpu *testPresetUsecase) FindByID(id string) (*model.Preset, error) {
-	for _, t := range presetTable {
-		if t.preset.ID.String() == id {
-			return &t.preset, nil
+func (tpu *testTimerPresetUsecase) FindByID(id string) (*model.TimerPreset, error) {
+	for _, t := range timerPresetTable {
+		if t.timerPreset.ID.String() == id {
+			return &t.timerPreset, nil
 		}
 	}
-	return &model.Preset{}, errors.New("not found")
+	return &model.TimerPreset{}, errors.New("not found")
 }
 
-func (tpu *testPresetUsecase) Get() ([]*model.Preset, error) {
-	var presets []*model.Preset
-	for _, t := range presetTable {
-		presets = append(presets, &t.preset)
+func (tpu *testTimerPresetUsecase) Get() ([]*model.TimerPreset, error) {
+	var timerPresets []*model.TimerPreset
+	for _, t := range timerPresetTable {
+		timerPresets = append(timerPresets, &t.timerPreset)
 	}
 
-	return presets, nil
+	return timerPresets, nil
 }
 
-func (tpu *testPresetUsecase) Create(preset *model.Preset) (*model.Preset, error) {
+func (tpu *testTimerPresetUsecase) Create(timerPreset *model.TimerPreset) (*model.TimerPreset, error) {
 	id, err := uuid.NewRandom()
 	if err != nil {
 		return nil, err
 	}
-	pt := presetTableStruct {
+	pt := timerPresetTableStruct {
 		name: "",
 		id: id.String(),
-		preset: *preset,
+		timerPreset: *timerPreset,
 		err: nil,
 	}
-	presetTable = append(presetTable, pt)
-	return preset, nil
+	timerPresetTable = append(timerPresetTable, pt)
+	return timerPreset, nil
 }
 
-func (tpu *testPresetUsecase) Update(preset *model.Preset) (*model.Preset, error) {
-	for i, p := range presetTable {
-		if p.preset.ID == preset.ID {
-			(&presetTable[i]).preset = *preset
-			return &presetTable[i].preset, nil
+func (tpu *testTimerPresetUsecase) Update(timerPreset *model.TimerPreset) (*model.TimerPreset, error) {
+	for i, p := range timerPresetTable {
+		if p.timerPreset.ID == timerPreset.ID {
+			(&timerPresetTable[i]).timerPreset = *timerPreset
+			return &timerPresetTable[i].timerPreset, nil
 		}
 	}
 	return nil, errors.New("not found")
 }
 
-func (tpu *testPresetUsecase) Delete(preset *model.Preset) error {
-	for i, p := range presetTable {
-		if p.preset.ID == preset.ID {
-			presetTable[i] = presetTable[len(presetTable)-1]
-			presetTable = presetTable[:len(presetTable)-1]
+func (tpu *testTimerPresetUsecase) Delete(timerPreset *model.TimerPreset) error {
+	for i, p := range timerPresetTable {
+		if p.timerPreset.ID == timerPreset.ID {
+			timerPresetTable[i] = timerPresetTable[len(timerPresetTable)-1]
+			timerPresetTable = timerPresetTable[:len(timerPresetTable)-1]
 			return nil
 		}
 	}
 	return errors.New("not found")
 }
 
-func (tpu *testPresetUsecase) GetCacheById(id string) (*model.Preset, error) {
-	return &model.Preset{}, nil
+func (tpu *testTimerPresetUsecase) GetCacheById(id string) (*model.TimerPreset, error) {
+	return &model.TimerPreset{}, nil
 }
 
-func (tpu *testPresetUsecase) SetCache(preset *model.Preset) error {
+func (tpu *testTimerPresetUsecase) SetCache(timerPreset *model.TimerPreset) error {
 	return nil
 }
 
 // test
 func TestFindByID(t *testing.T) {
-	mockPresetRepo := new(testPresetUsecase)
-	usecase_ := usecase.NewPresetUsecase(mockPresetRepo)
+	mockTimerPresetRepo := new(testTimerPresetUsecase)
+	usecase_ := usecase.NewTimerPresetUsecase(mockTimerPresetRepo)
 
-	for _, pt := range presetTable {
+	for _, pt := range timerPresetTable {
 		t.Run(pt.name, func(t *testing.T) {
 			p, err := usecase_.FindByID(pt.id)
 
 			assert.Equal(t, pt.err, err)
-			assert.Equal(t, pt.preset.Name, p.Name)
+			assert.Equal(t, pt.timerPreset.Name, p.Name)
 		})
 	}
 }
 
 func TestGet(t *testing.T) {
-	mockPresetRepo := new(testPresetUsecase)
-	usecase_ := usecase.NewPresetUsecase(mockPresetRepo)
+	mockTimerPresetRepo := new(testTimerPresetUsecase)
+	usecase_ := usecase.NewTimerPresetUsecase(mockTimerPresetRepo)
 
-	for _, pt := range presetTable {
+	for _, pt := range timerPresetTable {
 		t.Run(pt.name, func(t *testing.T) {
 			p, err := usecase_.Get()
 
 			assert.Equal(t, pt.err, err)
-			assert.Equal(t, len(presetTable), len(p))
+			assert.Equal(t, len(timerPresetTable), len(p))
 		})
 	}
 }
 
 func TestCreate(t *testing.T) {
-	mockPresetRepo := new(testPresetUsecase)
-	usecase_ := usecase.NewPresetUsecase(mockPresetRepo)
+	mockTimerPresetRepo := new(testTimerPresetUsecase)
+	usecase_ := usecase.NewTimerPresetUsecase(mockTimerPresetRepo)
 
-	for _, pt := range presetTable {
+	for _, pt := range timerPresetTable {
 		t.Run(pt.name, func(t *testing.T) {
 			p, err := usecase_.Create(
-				pt.preset.Name,
-				pt.preset.DisplayOrder,
-				pt.preset.LoopCount,
-				pt.preset.WaitsConfirmEach,
-				pt.preset.WaitsConfirmLast,
-				pt.preset.TimerUnits,
+				pt.timerPreset.Name,
+				pt.timerPreset.DisplayOrder,
+				pt.timerPreset.LoopCount,
+				pt.timerPreset.WaitsConfirmEach,
+				pt.timerPreset.WaitsConfirmLast,
+				pt.timerPreset.TimerUnits,
 			)
 
 			assert.Equal(t, pt.err, err)
-			assert.Equal(t, pt.preset.TimerUnits, p.TimerUnits)
+			assert.Equal(t, pt.timerPreset.TimerUnits, p.TimerUnits)
 		})
 	}
 }
 
 func TestUpdate(t *testing.T) {
-	mockPresetRepo := new(testPresetUsecase)
-	usecase_ := usecase.NewPresetUsecase(mockPresetRepo)
+	mockTimerPresetRepo := new(testTimerPresetUsecase)
+	usecase_ := usecase.NewTimerPresetUsecase(mockTimerPresetRepo)
 	testLoopCount := 1234
 
-	for _, pt := range presetTable {
+	for _, pt := range timerPresetTable {
 		t.Run(pt.name, func(t *testing.T) {
 			p, err := usecase_.Update(
-				pt.preset.ID.String(),
-				pt.preset.Name,
-				pt.preset.DisplayOrder,
+				pt.timerPreset.ID.String(),
+				pt.timerPreset.Name,
+				pt.timerPreset.DisplayOrder,
 				testLoopCount,
-				pt.preset.WaitsConfirmEach,
-				pt.preset.WaitsConfirmLast,
-				pt.preset.TimerUnits,
+				pt.timerPreset.WaitsConfirmEach,
+				pt.timerPreset.WaitsConfirmLast,
+				pt.timerPreset.TimerUnits,
 			)
 			assert.Equal(t, pt.err, err)
 
@@ -213,12 +213,12 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	mockPresetRepo := new(testPresetUsecase)
-	usecase_ := usecase.NewPresetUsecase(mockPresetRepo)
+	mockTimerPresetRepo := new(testTimerPresetUsecase)
+	usecase_ := usecase.NewTimerPresetUsecase(mockTimerPresetRepo)
 
-	for _, pt := range presetTable {
+	for _, pt := range timerPresetTable {
 		t.Run(pt.name, func(t *testing.T) {
-			err := usecase_.Delete(pt.preset.ID.String())
+			err := usecase_.Delete(pt.timerPreset.ID.String())
 			assert.Equal(t, pt.err, err)
 		})
 	}

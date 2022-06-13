@@ -6,38 +6,38 @@ import (
 	"ultimate_timer/domain/repository"
 )
 
-type PresetUsecase interface {
+type TimerPresetUsecase interface {
 	Create(
 		name string,
 		displayOrder, loopCount int,
 		waitsConfirmEach, waitsConfirmLast bool,
-		timerUnits json.RawMessage) (*model.Preset, error)
-	Get() ([]*model.Preset, error)
-	FindByID(id string) (*model.Preset, error)
+		timerUnits json.RawMessage) (*model.TimerPreset, error)
+	Get() ([]*model.TimerPreset, error)
+	FindByID(id string) (*model.TimerPreset, error)
 	Update(
 		id string,
 		name string,
 		displayOrder, loopCount int,
 		waitsConfirmEach, waitsConfirmLast bool,
-		timerUnits json.RawMessage) (*model.Preset, error)
+		timerUnits json.RawMessage) (*model.TimerPreset, error)
 	Delete(id string) error
 }
 
-type presetUsecase struct {
-	presetRepo repository.PresetRepository
+type timerPresetUsecase struct {
+	timerPresetRepo repository.TimerPresetRepository
 }
 
-func NewPresetUsecase(presetRepo repository.PresetRepository) PresetUsecase {
-	return &presetUsecase{presetRepo: presetRepo}
+func NewTimerPresetUsecase(timerPresetRepo repository.TimerPresetRepository) TimerPresetUsecase {
+	return &timerPresetUsecase{timerPresetRepo: timerPresetRepo}
 }
 
-func (pr *presetUsecase) Create(
+func (pr *timerPresetUsecase) Create(
 	name string,
 	displayOrder, loopCount int,
 	waitsConfirmEach, waitsConfirmLast bool,
-	timerUnits json.RawMessage) (*model.Preset, error) {
+	timerUnits json.RawMessage) (*model.TimerPreset, error) {
 
-	preset, err := model.NewPreset(
+	timerPreset, err := model.NewTimerPreset(
 		name,
 		displayOrder,
 		loopCount,
@@ -49,63 +49,63 @@ func (pr *presetUsecase) Create(
 		return nil, err
 	}
 
-	createdPreset, err := pr.presetRepo.Create(preset)
+	createdTimerPreset, err := pr.timerPresetRepo.Create(timerPreset)
 	if err != nil {
 		return nil, err
 	}
 
-	return createdPreset, nil
+	return createdTimerPreset, nil
 }
 
-func (pr *presetUsecase) FindByID(id string) (*model.Preset, error) {
-	preset, err := pr.presetRepo.FindByID(id)
+func (pr *timerPresetUsecase) FindByID(id string) (*model.TimerPreset, error) {
+	timerPreset, err := pr.timerPresetRepo.FindByID(id)
 	if err != nil {
 		return nil, err
 	}
 
-	return preset, nil
+	return timerPreset, nil
 }
 
-func (pr *presetUsecase) Get() ([]*model.Preset, error) {
-	presets, err := pr.presetRepo.Get()
+func (pr *timerPresetUsecase) Get() ([]*model.TimerPreset, error) {
+	timerPresets, err := pr.timerPresetRepo.Get()
 	if err != nil {
 		return nil, err
 	}
 
-	return presets, nil
+	return timerPresets, nil
 }
 
-func (pr *presetUsecase) Update(
+func (pr *timerPresetUsecase) Update(
 	id, name string,
 	displayOrder, loopCount int,
 	waitsConfirmEach, waitsConfirmLast bool,
-	timerUnits json.RawMessage) (*model.Preset, error) {
+	timerUnits json.RawMessage) (*model.TimerPreset, error) {
 
-	preset, err := pr.presetRepo.FindByID(id)
+	timerPreset, err := pr.timerPresetRepo.FindByID(id)
 	if err != nil {
 		return nil, err
 	}
 
-	err = preset.Set(name, displayOrder, loopCount, waitsConfirmEach, waitsConfirmLast, timerUnits)
+	err = timerPreset.Set(name, displayOrder, loopCount, waitsConfirmEach, waitsConfirmLast, timerUnits)
 	if err != nil {
 		return nil, err
 	}
 
-	updatedPreset, err := pr.presetRepo.Update(preset)
+	updatedTimerPreset, err := pr.timerPresetRepo.Update(timerPreset)
 	if err != nil {
 		return nil, err
 	}
 
-	return updatedPreset, nil
+	return updatedTimerPreset, nil
 }
 
-func (pr *presetUsecase) Delete(id string) error {
-	preset, err := pr.presetRepo.FindByID(id)
+func (pr *timerPresetUsecase) Delete(id string) error {
+	timerPreset, err := pr.timerPresetRepo.FindByID(id)
 	if err != nil {
 		return err
 	}
 
-	err = pr.presetRepo.Delete(preset)
+	err = pr.timerPresetRepo.Delete(timerPreset)
 	if err != nil {
 		return err
 	}

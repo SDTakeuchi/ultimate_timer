@@ -4,11 +4,11 @@ import (
 	"github.com/labstack/echo"
 )
 
-func InitRouting(e *echo.Echo, presetHandler PresetHandler) {
+func InitRouting(e *echo.Echo, timerPresetHandler TimerPresetHandler) {
 	g := e.Group("/api")
-	g.POST("/presets/", presetHandler.Post())
-	g.GET("/presets/", presetHandler.Get())
-	g.GET("/presets/:id", presetHandler.FindByID())
-	g.PUT("/presets/:id", presetHandler.Put())
-	g.DELETE("/presets/:id", presetHandler.Delete())
+	g.POST("/timer-preset/", timerPresetHandler.Post())
+	g.GET("/timer-preset/", timerPresetHandler.Get())
+	g.GET("/timer-preset/:id", timerPresetHandler.FindByID())
+	g.PUT("/timer-preset/:id", timerPresetHandler.Put())
+	g.DELETE("/timer-preset/:id", timerPresetHandler.Delete())
 }

@@ -9,7 +9,7 @@ import (
 	"ultimate_timer/services"
 )
 
-func (pr *PresetRepository) GetCacheById(id string) (*model.Preset, error) {
+func (pr *TimerPresetRepository) GetCacheById(id string) (*model.TimerPreset, error) {
 	p, err := pr.Cache.Get(context.Background(), id).Result()
 	if err == redis.Nil {
 		return nil, redis.Nil
@@ -17,7 +17,7 @@ func (pr *PresetRepository) GetCacheById(id string) (*model.Preset, error) {
 		services.Logf("%v", err)
 		return nil, err
 	}
-	preset := &model.Preset{}
+	preset := &model.TimerPreset{}
 	err = json.Unmarshal([]byte(p), preset)
 	if err != nil {
 		services.Logf("%v", err)
@@ -26,7 +26,7 @@ func (pr *PresetRepository) GetCacheById(id string) (*model.Preset, error) {
 	return preset, nil
 }
 
-func (pr *PresetRepository) SetCache(preset *model.Preset) error {
+func (pr *TimerPresetRepository) SetCache(preset *model.TimerPreset) error {
 	p, err := json.Marshal(preset)
 	if err != nil {
 		services.Logf("%v", err)

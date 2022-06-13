@@ -6,6 +6,7 @@ import (
 
 // thanks to
 // https://zenn.dev/glassonion1/articles/7c7830a269909c
+
 func Contains(list interface{}, elem interface{}) bool {
     listV := reflect.ValueOf(list)
 

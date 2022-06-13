@@ -4,13 +4,13 @@ import (
     "ultimate_timer/domain/model"
 )
 
-type PresetRepository interface {
-    Create(preset *model.Preset) (*model.Preset, error)
-    Get() ([]*model.Preset, error)
-    FindByID(id string) (*model.Preset, error)
-    Update(preset *model.Preset) (*model.Preset, error)
-    Delete(preset *model.Preset) error
+type TimerPresetRepository interface {
+    Create(preset *model.TimerPreset) (*model.TimerPreset, error)
+    Get() ([]*model.TimerPreset, error)
+    FindByID(id string) (*model.TimerPreset, error)
+    Update(preset *model.TimerPreset) (*model.TimerPreset, error)
+    Delete(preset *model.TimerPreset) error
 
-    GetCacheById(id string) (*model.Preset, error)
-    SetCache(preset *model.Preset) error
+    GetCacheById(id string) (*model.TimerPreset, error)
+    SetCache(preset *model.TimerPreset) error
 }

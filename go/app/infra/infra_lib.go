@@ -5,7 +5,7 @@ import (
 	"ultimate_timer/domain/model"
 )
 
-func CleanName(savedNames []string, p *model.Preset) {
+func CleanName(savedNames []string, p *model.TimerPreset) {
 	if p.Name == "" {
 		p.Name = "Timer"
 	}

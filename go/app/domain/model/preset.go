@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type Preset struct {
+type TimerPreset struct {
 	BaseModel
 	Name             string          `db:"name"`
 	DisplayOrder     int             `db:"display_order"`
@@ -15,15 +15,15 @@ type Preset struct {
 	TimerUnits       json.RawMessage `db:"timer_unit"`
 }
 
-func NewPreset(
+func NewTimerPreset(
 	name string,
 	displayOrder, loopCount int,
 	waitsConfirmEach, waitsConfirmLast bool,
-	timerUnits json.RawMessage) (*Preset, error) {
+	timerUnits json.RawMessage) (*TimerPreset, error) {
 
 	now := time.Now()
 
-	preset := &Preset{
+	tp := &TimerPreset{
 		BaseModel: BaseModel{
 			CreatedAt: now,
 			UpdatedAt: now,
@@ -36,10 +36,10 @@ func NewPreset(
 		TimerUnits:       timerUnits,
 	}
 
-	return preset, nil
+	return tp, nil
 }
 
-func (p *Preset) Set(
+func (p *TimerPreset) Set(
 	name string,
 	displayOrder, loopCount int,
 	waitsConfirmEach, waitsConfirmLast bool,
