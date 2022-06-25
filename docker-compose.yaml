@@ -39,7 +39,9 @@ services:
     #         - ./mongodb/configdb:/data/configdb
 
     app:
-        build: ./go
+        build:
+            context: ./go
+            target: dev
         container_name: go_app
         hostname: go_app
         tty: true
@@ -47,8 +49,6 @@ services:
             - "8080:8080"
         volumes:
             - ./go/app/:/go/ultimate_timer/
-        command:
-            - "./start.sh"
         depends_on:
             - db
 
