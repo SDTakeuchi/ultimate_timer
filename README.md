@@ -66,7 +66,11 @@ On the next page, you can push either the "PLAY" button or the "RESTART" button 
 API is also accessible. The endpoints are listed below.
 
 GET `http://localhost/api/presets/` : retrieve a list of presets
+
 GET `http://localhost/api/presets/{id}` : retrieve a preset specified by ID
+
 POST `http://localhost/api/presets/` : create a new preset
+
 PUT `http://localhost/api/presets/{id}` : update a preset specified by ID
+
 DELETE `http://localhost/api/presets/{id}` : delete a preset specified by ID
