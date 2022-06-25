@@ -40,10 +40,10 @@ Then, docker-compose up the project at the directory where docker-compose.yaml i
 
 # How to Use the Project
 
----CAUTION---
+### CAUTION
 I am afraid that the frontend is work in progress because I wanted to learn specifically about the backend knowledge.
 So, there are plenty of unnecessary buttons and inputs here and there...
-------
+
 
 You can use the project on your favorite browser.
 
