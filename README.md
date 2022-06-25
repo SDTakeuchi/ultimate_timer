@@ -12,7 +12,7 @@ The Ultimate Timer is here to set you free from those annoying moments.
 
 You can save your custom timer presets in The Ultimate Timer.
 
-# Table of Contents
+# Contents
 
 The project is created by Typescript and Golang.
 
