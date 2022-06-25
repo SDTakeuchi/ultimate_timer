@@ -18,7 +18,11 @@ The project is created by Typescript and Golang.
 
 The frontend is organized quite simply as being made upon the Next.js framework, whereas the backend is structured by Golang with DDD.
 
-Hence, Redis is utilized in the backend to fetch the requested resource immediately.
+Hence, Redis is utilized in the backend to fetch the requested resource immediately
+
+If Redis does not have the requested resource, it will then look for the resource in the Postgres.
+
+if the resourse was found in the Postgres, it will cache the data concurrently.
 
 Although as written above, the backend is made according to the DDD architecture, I realized that there is so much room for improvement after I learned more in-depth about DDD.
 
